@@ -9,6 +9,7 @@ using Pulumi.Serialization;
 
 namespace Pulumi.Xyz
 {
+    [Obsolete(@"xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource")]
     public static class GetDataSource
     {
         public static Task<GetDataSourceResult> InvokeAsync(GetDataSourceArgs args, InvokeOptions? options = null)

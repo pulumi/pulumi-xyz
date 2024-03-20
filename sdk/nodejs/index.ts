@@ -5,6 +5,11 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 // Export members:
+export { DataSourceArgs, DataSourceResult, DataSourceOutputArgs } from "./dataSource";
+export const dataSource: typeof import("./dataSource").dataSource = null as any;
+export const dataSourceOutput: typeof import("./dataSource").dataSourceOutput = null as any;
+utilities.lazyLoad(exports, ["dataSource","dataSourceOutput"], () => require("./dataSource"));
+
 export { GetDataSourceArgs, GetDataSourceResult, GetDataSourceOutputArgs } from "./getDataSource";
 export const getDataSource: typeof import("./getDataSource").getDataSource = null as any;
 export const getDataSourceOutput: typeof import("./getDataSource").getDataSourceOutput = null as any;

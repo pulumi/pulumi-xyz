@@ -11,6 +11,7 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
+// Deprecated: xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource
 func GetDataSource(ctx *pulumi.Context, args *GetDataSourceArgs, opts ...pulumi.InvokeOption) (*GetDataSourceResult, error) {
 	opts = internal.PkgInvokeDefaultOpts(opts)
 	var rv GetDataSourceResult

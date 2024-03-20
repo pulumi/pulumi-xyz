@@ -16,6 +16,8 @@ __all__ = [
     'get_data_source_output',
 ]
 
+warnings.warn("""xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource""", DeprecationWarning)
+
 @pulumi.output_type
 class GetDataSourceResult:
     """
@@ -58,6 +60,7 @@ def get_data_source(sample_attribute: Optional[str] = None,
     """
     Use this data source to access information about an existing resource.
     """
+    pulumi.log.warn("""get_data_source is deprecated: xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource""")
     __args__ = dict()
     __args__['sampleAttribute'] = sample_attribute
     opts = pulumi.InvokeOptions.merge(_utilities.get_invoke_opts_defaults(), opts)
@@ -74,4 +77,5 @@ def get_data_source_output(sample_attribute: Optional[pulumi.Input[str]] = None,
     """
     Use this data source to access information about an existing resource.
     """
+    pulumi.log.warn("""get_data_source is deprecated: xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource""")
     ...

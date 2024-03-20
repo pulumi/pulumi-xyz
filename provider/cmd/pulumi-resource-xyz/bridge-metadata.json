@@ -7,19 +7,38 @@
         },
         "datasources": {
             "xyz_data_source": {
-                "current": "xyz:index/getDataSource:getDataSource"
+                "current": "xyz:index/dataSource:DataSource",
+                "past": [
+                    {
+                        "name": "xyz:index/getDataSource:getDataSource",
+                        "inCodegen": true,
+                        "majorVersion": 0
+                    }
+                ]
             }
         }
     },
-    "auto-settings": {},
+    "auto-settings": {
+        "datasources": {
+            "xyz_data_source": {
+                "renames": [
+                    "xyz:index/getDataSource:getDataSource"
+                ]
+            }
+        }
+    },
     "renames": {
         "resources": {
             "xyz:index/resource:Resource": "xyz_resource"
         },
         "functions": {
-            "xyz:index/getDataSource:getDataSource": "xyz_data_source"
+            "xyz:index/dataSource:DataSource": "xyz_data_source",
+            "xyz:index/getDataSource:getDataSource": "xyz_data_source_legacy"
         },
         "renamedProperties": {
+            "xyz:index/dataSource:DataSource": {
+                "sampleAttribute": "sample_attribute"
+            },
             "xyz:index/getDataSource:getDataSource": {
                 "sampleAttribute": "sample_attribute"
             },

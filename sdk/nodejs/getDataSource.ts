@@ -4,7 +4,9 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
+/** @deprecated xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource */
 export function getDataSource(args: GetDataSourceArgs, opts?: pulumi.InvokeOptions): Promise<GetDataSourceResult> {
+    pulumi.log.warn("getDataSource is deprecated: xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource")
 
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("xyz:index/getDataSource:getDataSource", {
@@ -29,6 +31,7 @@ export interface GetDataSourceResult {
     readonly id: string;
     readonly sampleAttribute: string;
 }
+/** @deprecated xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource */
 export function getDataSourceOutput(args: GetDataSourceOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<GetDataSourceResult> {
     return pulumi.output(args).apply((a: any) => getDataSource(a, opts))
 }
