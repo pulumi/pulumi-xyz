@@ -3,7 +3,7 @@
 PACK := xyz
 ORG := pulumi
 PROJECT := github.com/$(ORG)/pulumi-$(PACK)
-PROVIDER_PATH := provider/v2
+PROVIDER_PATH := provider
 VERSION_PATH := $(PROVIDER_PATH)/pkg/version.Version
 TFGEN := pulumi-tfgen-$(PACK)
 PROVIDER := pulumi-resource-$(PACK)
@@ -107,6 +107,9 @@ install_nodejs_sdk:
 install_plugins: export PULUMI_HOME := $(WORKING_DIR)/.pulumi
 install_plugins: export PATH := $(WORKING_DIR)/.pulumi/bin:$(PATH)
 install_plugins: .pulumi/bin/pulumi
+	.pulumi/bin/pulumi plugin install resource random 4.8.2
+	.pulumi/bin/pulumi plugin install resource std 1.6.2
+	.pulumi/bin/pulumi plugin install converter terraform 1.0.15
 
 lint_provider: provider
 	cd provider && golangci-lint run -c ../.golangci.yml

@@ -88,8 +88,9 @@ func Provider() tfbridge.ProviderInfo {
 		Repository: "https://github.com/pulumi/pulumi-xyz",
 		// The GitHub Org for the provider - defaults to `terraform-providers`. Note that this
 		// should match the TF provider module's require directive, not any replace directives.
-		GitHubOrg:    "",
-		MetadataInfo: tfbridge.NewProviderMetadata(metadata),
+		GitHubOrg:        "",
+		UpstreamRepoPath: "github.com/iwahbe/terraform-provider-xyz",
+		MetadataInfo:     tfbridge.NewProviderMetadata(metadata),
 		Config: map[string]*tfbridge.SchemaInfo{
 			"region": {
 				Type: tfbridge.MakeResource(mainPkg, "region", "Region"),

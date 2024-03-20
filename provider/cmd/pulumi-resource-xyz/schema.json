@@ -96,18 +96,18 @@
                 "description": "A collection of values returned by getDataSource.\n",
                 "properties": {
                     "id": {
-                        "type": "string",
-                        "description": "The provider-assigned unique ID for this managed resource.\n"
+                        "description": "The provider-assigned unique ID for this managed resource.\n",
+                        "type": "string"
                     },
                     "sampleAttribute": {
                         "type": "string"
                     }
                 },
-                "type": "object",
                 "required": [
                     "sampleAttribute",
                     "id"
-                ]
+                ],
+                "type": "object"
             }
         }
     }
