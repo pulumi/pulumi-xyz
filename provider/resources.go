@@ -100,8 +100,13 @@ func Provider() tfbridge.ProviderInfo {
 			},
 		},
 		PreConfigureCallback: preConfigureCallback,
-		Resources:            map[string]*tfbridge.ResourceInfo{},
-		DataSources:          map[string]*tfbridge.DataSourceInfo{},
+		Resources: map[string]*tfbridge.ResourceInfo{
+			"xyz_resource": {
+				Tok:  tfbridge.MakeResource(mainPkg, mainMod, "Resource"),
+				Docs: &tfbridge.DocInfo{AllowMissing: true},
+			},
+		},
+		DataSources: map[string]*tfbridge.DataSourceInfo{},
 		JavaScript: &tfbridge.JavaScriptInfo{
 			// List any npm dependencies and their versions
 			Dependencies: map[string]string{
