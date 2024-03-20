@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package xyz
+package provider
 
 import (
 	"fmt"
@@ -21,14 +21,14 @@ import (
 	// Allow embedding bridge-metadata.json in the provider.
 	_ "embed"
 
+	// Replace this provider with the provider you are bridging.
+	xyz "github.com/iwahbe/terraform-provider-xyz/provider"
+
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
 	shim "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim"
 	shimv2 "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim/sdk-v2"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
-
-	// Replace this provider with the provider you are bridging.
-	xyz "github.com/iwahbe/terraform-provider-xyz/provider"
 
 	"github.com/pulumi/pulumi-xyz/provider/pkg/version"
 )
@@ -86,39 +86,32 @@ func Provider() tfbridge.ProviderInfo {
 		License:    "Apache-2.0",
 		Homepage:   "https://www.pulumi.com",
 		Repository: "https://github.com/pulumi/pulumi-xyz",
+		Version:    version.Version,
 		// The GitHub Org for the provider - defaults to `terraform-providers`. Note that this
 		// should match the TF provider module's require directive, not any replace directives.
-		GitHubOrg:    "",
-		MetadataInfo: tfbridge.NewProviderMetadata(metadata),
-		Config:       map[string]*tfbridge.SchemaInfo{
-			// Add any required configuration here, or remove the example below if
-			// no additional points are required.
-			// "region": {
-			// 	Type: tfbridge.MakeType("region", "Region"),
-			// 	Default: &tfbridge.DefaultInfo{
-			// 		EnvVars: []string{"AWS_REGION", "AWS_DEFAULT_REGION"},
-			// 	},
-			// },
+		GitHubOrg:        "",
+		UpstreamRepoPath: "github.com/iwahbe/terraform-provider-xyz",
+		MetadataInfo:     tfbridge.NewProviderMetadata(metadata),
+		Config: map[string]*tfbridge.SchemaInfo{
+			"region": {
+				Type: tfbridge.MakeResource(mainPkg, "region", "Region"),
+				Default: &tfbridge.DefaultInfo{
+					EnvVars: []string{"XYZ_REGION", "XYZ_DEFAULT_REGION"},
+				},
+			},
 		},
 		PreConfigureCallback: preConfigureCallback,
-		Resources:            map[string]*tfbridge.ResourceInfo{
-			// Map each resource in the Terraform provider to a Pulumi type. Two examples
-			// are below - the single line form is the common case. The multi-line form is
-			// needed only if you wish to override types or other default options.
-			//
-			// "aws_iam_role": {Tok: tfbridge.MakeResource(mainPkg, mainMod, "IamRole")}
-			//
-			// "aws_acm_certificate": {
-			// 	Tok: tfbridge.MakeResource(mainPkg, mainMod, "Certificate"),
-			// 	Fields: map[string]*tfbridge.SchemaInfo{
-			// 		"tags": {Type: tfbridge.MakeType(mainPkg, "Tags")},
-			// 	},
-			// },
+		Resources: map[string]*tfbridge.ResourceInfo{
+			"xyz_resource": {
+				Tok:  tfbridge.MakeResource(mainPkg, mainMod, "Resource"),
+				Docs: &tfbridge.DocInfo{AllowMissing: true},
+			},
 		},
 		DataSources: map[string]*tfbridge.DataSourceInfo{
-			// Map each resource in the Terraform provider to a Pulumi function. An example
-			// is below.
-			// "aws_ami": {Tok: tfbridge.MakeDataSource(mainPkg, mainMod, "getAmi")},
+			"xyz_data_source": {
+				Tok:  tfbridge.MakeDataSource(mainPkg, mainMod, "DataSource"),
+				Docs: &tfbridge.DocInfo{AllowMissing: true},
+			},
 		},
 		JavaScript: &tfbridge.JavaScriptInfo{
 			// List any npm dependencies and their versions
@@ -132,14 +125,17 @@ func Provider() tfbridge.ProviderInfo {
 			// See the documentation for tfbridge.OverlayInfo for how to lay out this
 			// section, or refer to the AWS provider. Delete this section if there are
 			// no overlay files.
-			//Overlay: &tfbridge.OverlayInfo{},
+			// Overlay: &tfbridge.OverlayInfo{},
 		},
-		Python: &tfbridge.PythonInfo{
-			// List any Python dependencies and their version ranges
-			Requires: map[string]string{
-				"pulumi": ">=3.0.0,<4.0.0",
-			},
-		},
+		Python: (func() *tfbridge.PythonInfo {
+			i := &tfbridge.PythonInfo{
+				Requires: map[string]string{
+					"pulumi": ">=3.0.0,<4.0.0",
+				},
+			}
+			i.PyProject.Enabled = true
+			return i
+		})(),
 		Golang: &tfbridge.GolangInfo{
 			ImportBasePath: path.Join(
 				fmt.Sprintf("github.com/pulumi/pulumi-%[1]s/sdk/", mainPkg),

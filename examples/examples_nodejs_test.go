@@ -4,18 +4,30 @@
 package examples
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 )
 
-func getJSBaseOptions(t *testing.T) integration.ProgramTestOptions {
+func getJSBaseOptions() integration.ProgramTestOptions {
 	base := getBaseOptions()
 	baseJS := base.With(integration.ProgramTestOptions{
 		Dependencies: []string{
-			"@pulumi/foo",
+			"@pulumi/xyz",
 		},
 	})
 
 	return baseJS
+}
+
+func TestBasic(t *testing.T) {
+	opts := getJSBaseOptions()
+	opts = opts.With(integration.ProgramTestOptions{
+        Dir: filepath.Join(getCwd(t), "basic"),
+		Quick: true,
+		SkipUpdate: true,
+    })
+
+	integration.ProgramTest(t, &opts)
 }
