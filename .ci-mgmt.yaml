@@ -1,0 +1,7 @@
+provider: xyz
+env:
+  PULUMI_MISSING_DOCS_ERROR: true
+  XYZ_REGION: "us-west-2"
+makeTemplate: bridged
+pulumiConvert: 1
+goBuildParallelism: 2
