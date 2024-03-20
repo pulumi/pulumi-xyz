@@ -1,1 +1,31 @@
-{}
+{
+    "auto-aliasing": {
+        "resources": {
+            "xyz_resource": {
+                "current": "xyz:index/resource:Resource"
+            }
+        },
+        "datasources": {
+            "xyz_data_source": {
+                "current": "xyz:index/getDataSource:getDataSource"
+            }
+        }
+    },
+    "auto-settings": {},
+    "renames": {
+        "resources": {
+            "xyz:index/resource:Resource": "xyz_resource"
+        },
+        "functions": {
+            "xyz:index/getDataSource:getDataSource": "xyz_data_source"
+        },
+        "renamedProperties": {
+            "xyz:index/getDataSource:getDataSource": {
+                "sampleAttribute": "sample_attribute"
+            },
+            "xyz:index/resource:Resource": {
+                "sampleAttribute": "sample_attribute"
+            }
+        }
+    }
+}
