@@ -106,7 +106,12 @@ func Provider() tfbridge.ProviderInfo {
 				Docs: &tfbridge.DocInfo{AllowMissing: true},
 			},
 		},
-		DataSources: map[string]*tfbridge.DataSourceInfo{},
+		DataSources: map[string]*tfbridge.DataSourceInfo{
+			"xyz_data_source": {
+				Tok:  tfbridge.MakeDataSource(mainPkg, mainMod, "DataSource"),
+				Docs: &tfbridge.DocInfo{AllowMissing: true},
+			},
+		},
 		JavaScript: &tfbridge.JavaScriptInfo{
 			// List any npm dependencies and their versions
 			Dependencies: map[string]string{
