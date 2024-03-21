@@ -459,3 +459,5 @@ on:
     tags:
     - v*.*.*
     - "!v*.*.*-**"
+  pull_request:
+
