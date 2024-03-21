@@ -1,0 +1,35 @@
+com/pulumi/xyz/ResourceArgs.java
+ com.pulumi.xyz.ResourceArgs
+ com.pulumi.xyz.ResourceArgs$Builder
+com/pulumi/xyz/inputs/ResourceState.java
+ com.pulumi.xyz.inputs.ResourceState
+ com.pulumi.xyz.inputs.ResourceState$Builder
+com/pulumi/xyz/inputs/GetDataSourcePlainArgs.java
+ com.pulumi.xyz.inputs.GetDataSourcePlainArgs
+ com.pulumi.xyz.inputs.GetDataSourcePlainArgs$Builder
+com/pulumi/xyz/Utilities.java
+ com.pulumi.xyz.Utilities
+com/pulumi/xyz/ProviderArgs.java
+ com.pulumi.xyz.ProviderArgs
+ com.pulumi.xyz.ProviderArgs$Builder
+com/pulumi/xyz/inputs/DataSourceArgs.java
+ com.pulumi.xyz.inputs.DataSourceArgs
+ com.pulumi.xyz.inputs.DataSourceArgs$Builder
+com/pulumi/xyz/outputs/DataSourceResult.java
+ com.pulumi.xyz.outputs.DataSourceResult
+ com.pulumi.xyz.outputs.DataSourceResult$Builder
+com/pulumi/xyz/XyzFunctions.java
+ com.pulumi.xyz.XyzFunctions
+com/pulumi/xyz/outputs/GetDataSourceResult.java
+ com.pulumi.xyz.outputs.GetDataSourceResult
+ com.pulumi.xyz.outputs.GetDataSourceResult$Builder
+com/pulumi/xyz/inputs/GetDataSourceArgs.java
+ com.pulumi.xyz.inputs.GetDataSourceArgs
+ com.pulumi.xyz.inputs.GetDataSourceArgs$Builder
+com/pulumi/xyz/Resource.java
+ com.pulumi.xyz.Resource
+com/pulumi/xyz/inputs/DataSourcePlainArgs.java
+ com.pulumi.xyz.inputs.DataSourcePlainArgs
+ com.pulumi.xyz.inputs.DataSourcePlainArgs$Builder
+com/pulumi/xyz/Provider.java
+ com.pulumi.xyz.Provider
