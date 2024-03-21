@@ -496,3 +496,5 @@ on:
     - v*
     - sdk/*
     - "**"
+  pull_request:
+
