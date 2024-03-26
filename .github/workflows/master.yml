@@ -496,5 +496,3 @@ on:
     - v*
     - sdk/*
     - "**"
-
-# Ensure diff with ci-mgmt
