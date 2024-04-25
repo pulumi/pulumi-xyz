@@ -23,7 +23,7 @@ env:
   PULUMI_MISSING_DOCS_ERROR: true
   PYPI_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
   PYPI_USERNAME: __token__
-  PYTHONVERSION: "3.11"
+  PYTHONVERSION: 3.11.8
   SIGNING_KEY: ${{ secrets.JAVA_SIGNING_KEY }}
   SIGNING_KEY_ID: ${{ secrets.JAVA_SIGNING_KEY_ID }}
   SIGNING_PASSWORD: ${{ secrets.JAVA_SIGNING_PASSWORD }}
@@ -45,6 +45,7 @@ jobs:
         path: ci-scripts
         repository: pulumi/scripts
         ref: deca2c5c6015ad7aaea6f572a1c2b198ca323592
+    - run: mv ci-scripts ../ci-scripts # actions/checkout#197
     - name: Unshallow clone for tags
       run: git fetch --prune --unshallow --tags
     - name: Install Go
@@ -53,6 +54,12 @@ jobs:
         cache-dependency-path: |
             sdk/go.sum
         go-version: 1.21.x
+    - name: Cache examples generation
+      uses: actions/cache@v4
+      with:
+        path: |
+          .pulumi/examples-cache
+        key: ${{ runner.os }}-${{ hashFiles('provider/go.sum') }}
     - name: Install pulumictl
       uses: jaxxstorm/action-install-gh-release@v1.11.0
       with:
@@ -106,7 +113,7 @@ jobs:
     - name: Build SDK
       run: make build_${{ matrix.language }}
     - name: Check worktree clean
-      run: ./ci-scripts/ci/check-worktree-is-clean
+      run: ../ci-scripts/ci/check-worktree-is-clean
     - name: Compress SDK folder
       run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }} .
     - name: Upload artifacts
@@ -114,6 +121,7 @@ jobs:
       with:
         name: ${{ matrix.language  }}-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/${{ matrix.language }}.tar.gz
+        retention-days: 30
     - if: failure() && github.event_name == 'push'
       name: Notify Slack
       uses: 8398a7/action-slack@v3
@@ -130,6 +138,7 @@ jobs:
         - dotnet
         - go
         - java
+
   lint:
     name: lint
     uses: ./.github/workflows/lint.yml
@@ -144,20 +153,23 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v4
-    - name: Checkout Scripts Repo
-      uses: actions/checkout@v4
+    - name: Cache examples generation
+      uses: actions/cache@v4
       with:
-        path: ci-scripts
-        repository: pulumi/scripts
-        ref: deca2c5c6015ad7aaea6f572a1c2b198ca323592
+        path: |
+          .pulumi/examples-cache
+        key: ${{ runner.os }}-${{ hashFiles('provider/go.sum') }}
     - name: Unshallow clone for tags
       run: git fetch --prune --unshallow --tags
+    - name: Prepare upstream code
+      run: make upstream
     - name: Install Go
       uses: actions/setup-go@v5
       with:
-        cache-dependency-path: |
-            sdk/go.sum
         go-version: 1.21.x
+        cache-dependency-path: |
+          provider/*.sum
+          upstream/*.sum
     - name: Install pulumictl
       uses: jaxxstorm/action-install-gh-release@v1.11.0
       with:
@@ -172,8 +184,14 @@ jobs:
       uses: jaxxstorm/action-install-gh-release@v1.11.0
       with:
         repo: pulumi/schema-tools
-    - name: Build tfgen & provider binaries
-      run: make provider
+    - name: Build schema generator binary
+      run: make tfgen_build_only
+    - name: Install plugins
+      run: make install_plugins
+    - name: Generate schema
+      run: make tfgen_no_deps
+    - name: Build provider binary
+      run: make provider_no_deps
     - name: Unit-test provider code
       run: make test_provider
     - if: github.event_name == 'pull_request'
@@ -192,13 +210,37 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         comment_tag: schemaCheck
         message: >+
-          ### Does the PR have any schema changes?
-
-
           ${{ env.SCHEMA_CHANGES }}
 
 
           Maintainer note: consult the [runbook](https://github.com/pulumi/platform-providers-team/blob/main/playbooks/tf-provider-updating.md) for dealing with any breaking changes.
+
+    - if: github.event_name == 'pull_request'
+      name: Check Configuration section
+      run: |
+        sed -n '/## Configuration/,$p' README.md | sed -n '/## Reference/q;p' >> config_section.txt
+        jq -r '.config | select(.variables) | .variables | keys[]' < provider/cmd/pulumi-resource-${{ env.PROVIDER }}/schema.json >> keys.txt
+        EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+        {
+          echo "MISSING_CONFIG<<$EOF";
+          xargs -I {} sh -c "grep -q {} config_section.txt || echo \\\`{}\\\` not found in Configuration section" < keys.txt
+          echo "$EOF";
+        } >> "$GITHUB_ENV"
+
+    - if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+      name: Comment on PR with Details of Configuration check
+      uses: thollander/actions-comment-pull-request@v2
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        comment_tag: configurationCheck
+        message: >+
+          ### Is README.md missing any configuration options?
+
+          ${{ env.MISSING_CONFIG || 'No missing config!' }}
+
+
+          ${{ env.MISSING_CONFIG && 'Please add a description for each of these options to `README.md`.' }}
+          ${{ env.MISSING_CONFIG && 'Details about them can be found in either the upstream docs or `schema.json`.' }}
 
     - name: Tar provider binaries
       run: tar -zcf ${{ github.workspace }}/bin/provider.tar.gz -C ${{
@@ -307,12 +349,6 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v4
-    - name: Checkout Scripts Repo
-      uses: actions/checkout@v4
-      with:
-        path: ci-scripts
-        repository: pulumi/scripts
-        ref: deca2c5c6015ad7aaea6f572a1c2b198ca323592
     - name: Unshallow clone for tags
       run: git fetch --prune --unshallow --tags
     - name: Install Go
