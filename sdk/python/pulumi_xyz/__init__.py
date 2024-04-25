@@ -6,7 +6,6 @@ from . import _utilities
 import typing
 # Export this package's modules as members:
 from .data_source import *
-from .get_data_source import *
 from .provider import *
 from .resource import *
 _utilities.register(

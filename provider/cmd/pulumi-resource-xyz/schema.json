@@ -111,38 +111,6 @@
                 ],
                 "type": "object"
             }
-        },
-        "xyz:index/getDataSource:getDataSource": {
-            "deprecationMessage": "xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource",
-            "inputs": {
-                "description": "A collection of arguments for invoking getDataSource.\n",
-                "properties": {
-                    "sampleAttribute": {
-                        "type": "string"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "sampleAttribute"
-                ]
-            },
-            "outputs": {
-                "description": "A collection of values returned by getDataSource.\n",
-                "properties": {
-                    "id": {
-                        "description": "The provider-assigned unique ID for this managed resource.\n",
-                        "type": "string"
-                    },
-                    "sampleAttribute": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "sampleAttribute",
-                    "id"
-                ],
-                "type": "object"
-            }
         }
     }
 }
