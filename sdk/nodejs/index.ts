@@ -10,11 +10,6 @@ export const dataSource: typeof import("./dataSource").dataSource = null as any;
 export const dataSourceOutput: typeof import("./dataSource").dataSourceOutput = null as any;
 utilities.lazyLoad(exports, ["dataSource","dataSourceOutput"], () => require("./dataSource"));
 
-export { GetDataSourceArgs, GetDataSourceResult, GetDataSourceOutputArgs } from "./getDataSource";
-export const getDataSource: typeof import("./getDataSource").getDataSource = null as any;
-export const getDataSourceOutput: typeof import("./getDataSource").getDataSourceOutput = null as any;
-utilities.lazyLoad(exports, ["getDataSource","getDataSourceOutput"], () => require("./getDataSource"));
-
 export { ProviderArgs } from "./provider";
 export type Provider = import("./provider").Provider;
 export const Provider: typeof import("./provider").Provider = null as any;

@@ -10,10 +10,7 @@ import com.pulumi.deployment.InvokeOptions;
 import com.pulumi.xyz.Utilities;
 import com.pulumi.xyz.inputs.DataSourceArgs;
 import com.pulumi.xyz.inputs.DataSourcePlainArgs;
-import com.pulumi.xyz.inputs.GetDataSourceArgs;
-import com.pulumi.xyz.inputs.GetDataSourcePlainArgs;
 import com.pulumi.xyz.outputs.DataSourceResult;
-import com.pulumi.xyz.outputs.GetDataSourceResult;
 import java.util.concurrent.CompletableFuture;
 
 public final class XyzFunctions {
@@ -28,45 +25,5 @@ public final class XyzFunctions {
     }
     public static CompletableFuture<DataSourceResult> dataSourcePlain(DataSourcePlainArgs args, InvokeOptions options) {
         return Deployment.getInstance().invokeAsync("xyz:index/dataSource:DataSource", TypeShape.of(DataSourceResult.class), args, Utilities.withVersion(options));
-    }
-    /**
-     * 
-     * @deprecated
-     * xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource
-     * 
-     */
-    @Deprecated /* xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource */
-    public static Output<GetDataSourceResult> getDataSource(GetDataSourceArgs args) {
-        return getDataSource(args, InvokeOptions.Empty);
-    }
-    /**
-     * 
-     * @deprecated
-     * xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource
-     * 
-     */
-    @Deprecated /* xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource */
-    public static CompletableFuture<GetDataSourceResult> getDataSourcePlain(GetDataSourcePlainArgs args) {
-        return getDataSourcePlain(args, InvokeOptions.Empty);
-    }
-    /**
-     * 
-     * @deprecated
-     * xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource
-     * 
-     */
-    @Deprecated /* xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource */
-    public static Output<GetDataSourceResult> getDataSource(GetDataSourceArgs args, InvokeOptions options) {
-        return Deployment.getInstance().invoke("xyz:index/getDataSource:getDataSource", TypeShape.of(GetDataSourceResult.class), args, Utilities.withVersion(options));
-    }
-    /**
-     * 
-     * @deprecated
-     * xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource
-     * 
-     */
-    @Deprecated /* xyz.index/getdatasource.getDataSource has been deprecated in favor of xyz.index/datasource.DataSource */
-    public static CompletableFuture<GetDataSourceResult> getDataSourcePlain(GetDataSourcePlainArgs args, InvokeOptions options) {
-        return Deployment.getInstance().invokeAsync("xyz:index/getDataSource:getDataSource", TypeShape.of(GetDataSourceResult.class), args, Utilities.withVersion(options));
     }
 }
