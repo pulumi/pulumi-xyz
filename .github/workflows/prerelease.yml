@@ -105,6 +105,13 @@ jobs:
       run: make build_${{ matrix.language }}
     - name: Check worktree clean
       uses: pulumi/git-status-check-action@v1
+      with:
+        allowed-changes: |
+          sdk/**/pulumi-plugin.json
+          sdk/dotnet/Pulumi.*.csproj
+          sdk/go/*/internal/pulumiUtilities.go
+          sdk/nodejs/package.json
+          sdk/python/pyproject.toml
     - name: Compress SDK folder
       run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }} .
     - name: Upload artifacts
@@ -207,33 +214,6 @@ jobs:
 
           Maintainer note: consult the [runbook](https://github.com/pulumi/platform-providers-team/blob/main/playbooks/tf-provider-updating.md) for dealing with any breaking changes.
 
-    - if: github.event_name == 'pull_request'
-      name: Check Configuration section
-      run: |
-        sed -n '/## Configuration/,$p' README.md | sed -n '/## Reference/q;p' >> config_section.txt
-        jq -r '.config | select(.variables) | .variables | keys[]' < provider/cmd/pulumi-resource-${{ env.PROVIDER }}/schema.json >> keys.txt
-        EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-        {
-          echo "MISSING_CONFIG<<$EOF";
-          xargs -I {} sh -c "grep -q {} config_section.txt || echo \\\`{}\\\` not found in Configuration section" < keys.txt
-          echo "$EOF";
-        } >> "$GITHUB_ENV"
-
-    - if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
-      name: Comment on PR with Details of Configuration check
-      uses: thollander/actions-comment-pull-request@v2
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        comment_tag: configurationCheck
-        message: >+
-          ### Is README.md missing any configuration options?
-
-          ${{ env.MISSING_CONFIG || 'No missing config!' }}
-
-
-          ${{ env.MISSING_CONFIG && 'Please add a description for each of these options to `README.md`.' }}
-          ${{ env.MISSING_CONFIG && 'Details about them can be found in either the upstream docs or `schema.json`.' }}
-
     - name: Tar provider binaries
       run: tar -zcf ${{ github.workspace }}/bin/provider.tar.gz -C ${{
         github.workspace }}/bin/ pulumi-resource-${{ env.PROVIDER }}
@@ -300,6 +280,7 @@ jobs:
       uses: goreleaser/goreleaser-action@v5
       env:
         GORELEASER_CURRENT_TAG: v${{ steps.version.outputs.version }}
+        PROVIDER_VERSION: ${{ steps.version.outputs.version }}
       with:
         args: -p 3 -f .goreleaser.prerelease.yml --rm-dist --skip-validate --timeout
           60m0s
@@ -334,6 +315,37 @@ jobs:
       if: failure()
       name: Send Publish Failure To Slack
       uses: rtCamp/action-slack-notify@v2
+  publish_go_sdk:
+    name: publish_go_sdk
+    needs: publish_sdk
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+    - name: Install pulumictl
+      uses: jaxxstorm/action-install-gh-release@v1.11.0
+      with:
+        tag: v0.0.46
+        repo: pulumi/pulumictl
+    - id: version
+      uses: pulumi/provider-version-action@v1
+    - name: Download Go SDK
+      uses: actions/download-artifact@v4
+      with:
+        name: go-sdk.tar.gz
+        path: ${{ github.workspace }}/sdk/
+    - name: Uncompress Go SDK
+      run: tar -zxf ${{ github.workspace }}/sdk/go.tar.gz -C
+        ${{ github.workspace }}/sdk/go
+      shell: bash
+    - uses: pulumi/publish-go-sdk-action@v1
+      with:
+        repository: ${{ github.repository }}
+        base-ref: ${{ github.sha }}
+        source: sdk
+        path: sdk
+        version: ${{ steps.version.outputs.version }}
+        additive: false
   test:
     name: test
     needs: build_sdk
