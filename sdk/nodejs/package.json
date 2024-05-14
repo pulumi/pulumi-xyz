@@ -1,6 +1,6 @@
 {
     "name": "@pulumi/xyz",
-    "version": "${VERSION}",
+    "version": "1.0.0-alpha.0+dev",
     "description": "A Pulumi package for creating and managing xyz cloud resources.",
     "keywords": [
         "pulumi",
@@ -23,6 +23,7 @@
     },
     "pulumi": {
         "resource": true,
-        "name": "xyz"
+        "name": "xyz",
+        "version": "1.0.0-alpha.0+dev"
     }
 }

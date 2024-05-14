@@ -2,12 +2,14 @@
     "auto-aliasing": {
         "resources": {
             "xyz_resource": {
-                "current": "xyz:index/resource:Resource"
+                "current": "xyz:index/resource:Resource",
+                "majorVersion": 1
             }
         },
         "datasources": {
             "xyz_data_source": {
-                "current": "xyz:index/dataSource:DataSource"
+                "current": "xyz:index/dataSource:DataSource",
+                "majorVersion": 1
             }
         }
     },
