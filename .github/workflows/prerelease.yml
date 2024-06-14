@@ -269,6 +269,35 @@ jobs:
         - dotnet
         - go
         - java
+  release-verification:
+    name: release-verification
+    needs: 
+      - publish
+      - publish_sdk
+      - publish_go_sdk
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language:
+          - nodejs
+        platform:
+          - linux
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+    - name: Setup tools
+      uses: ./.github/actions/setup-tools
+    - id: version
+      uses: pulumi/provider-version-action@v1
+      with:
+        set-env: 'PROVIDER_VERSION'
+    - name: Verify release
+      uses: ./.github/actions/verify-release
+      with:
+        language: ${{ matrix.language }}
+        directory: examples/basic
+        version: ${{ steps.version.outputs.version }}
+
 name: prerelease
 on:
   push:
