@@ -27,6 +27,31 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  release-verification:
+    name: release-verification
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language:
+          - nodejs
+        platform:
+          - linux
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+    - name: Setup tools
+      uses: ./.github/actions/setup-tools
+    - id: version
+      uses: pulumi/provider-version-action@v1
+      with:
+        set-env: 'PROVIDER_VERSION'
+    - name: Verify release
+      uses: ./.github/actions/verify-release
+      with:
+        language: ${{ matrix.language }}
+        directory: examples/basic
+        version: "1.0.2-alpha.1"
+
   build_sdk:
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
