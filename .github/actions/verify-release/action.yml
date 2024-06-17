@@ -18,6 +18,10 @@ runs:
     - name: Initialize stack
       shell: bash
       working-directory: ${{ inputs.directory }}
+      env:
+        # Use local state storage as we're not actually deploying anything
+        PULUMI_BACKEND_URL: "file://~"
+        PULUMI_CONFIG_PASSPHRASE: correct-horse-battery-staple
       run: pulumi stack init ${{ inputs.language }}-${{ inputs.version }}
 
     - name: Install nodejs package
@@ -31,9 +35,15 @@ runs:
     - name: Install provider
       shell: bash
       working-directory: ${{ inputs.directory }}
+      env:
+        PULUMI_BACKEND_URL: "file://~"
+        PULUMI_CONFIG_PASSPHRASE: correct-horse-battery-staple
       run: pulumi install
 
     - name: Preview
       shell: bash
       working-directory: ${{ inputs.directory }}
+      env:
+        PULUMI_BACKEND_URL: "file://~"
+        PULUMI_CONFIG_PASSPHRASE: correct-horse-battery-staple
       run: pulumi preview
