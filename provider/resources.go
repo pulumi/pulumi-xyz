@@ -92,13 +92,14 @@ func Provider() tfbridge.ProviderInfo {
 		GitHubOrg:        "",
 		UpstreamRepoPath: "github.com/iwahbe/terraform-provider-xyz",
 		MetadataInfo:     tfbridge.NewProviderMetadata(metadata),
-		Config: map[string]*tfbridge.SchemaInfo{
-			"region": {
-				Type: tfbridge.MakeResource(mainPkg, "region", "Region"),
-				Default: &tfbridge.DefaultInfo{
-					EnvVars: []string{"XYZ_REGION", "XYZ_DEFAULT_REGION"},
-				},
-			},
+		Config:           map[string]*tfbridge.SchemaInfo{
+			// TODO: Implement region in the upstream provider so it doesn't error when set.
+			// "region": {
+			// 	Type: tfbridge.MakeResource(mainPkg, "region", "Region"),
+			// 	Default: &tfbridge.DefaultInfo{
+			// 		EnvVars: []string{"XYZ_REGION", "XYZ_DEFAULT_REGION"},
+			// 	},
+			// },
 		},
 		PreConfigureCallback: preConfigureCallback,
 		Resources: map[string]*tfbridge.ResourceInfo{
