@@ -74,7 +74,7 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/actions@v5
       with:
-        pulumi-version: "^3"
+        pulumi-version: "dev"
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -111,7 +111,7 @@ jobs:
     - id: version
       uses: pulumi/provider-version-action@v1
     - name: Publish SDKs
-      uses: pulumi/pulumi-package-publisher@v0.0.17
+      uses: pulumi/pulumi-package-publisher@v0.0.18
       with:
         sdk: all
         version: ${{ steps.version.outputs.version }}
@@ -193,7 +193,7 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/actions@v5
       with:
-        pulumi-version: "^3"
+        pulumi-version: "dev"
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
