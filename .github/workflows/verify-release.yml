@@ -1,0 +1,46 @@
+name: "Verify Release"
+
+on:
+  workflow_dispatch:
+    inputs:
+      providerVersion:
+        description: "The version of the provider to verify"
+        required: true
+        type: string
+      enableMacRunner:
+        description: "Enable the MacOS runner in addition to Linux and Windows. Defaults to 'false'."
+        required: false
+        type: boolean
+  workflow_call:
+    inputs:
+      providerVersion:
+        description: "The version of the provider to verify"
+        required: true
+        type: string
+      enableMacosRunner:
+        description: "Enable the macos-latest runner in addition to ubuntu-latest and windows-latest. Defaults to 'false'."
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  verify-release:
+    name: verify-release
+    strategy:
+      matrix:
+        # We don't have any release verification configurations, so we only run on Linux to print warnings to help users configure the release verification.
+        runner: ["ubuntu-latest"]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Setup tools
+        uses: ./.github/actions/setup-tools
+      - id: version
+        uses: pulumi/provider-version-action@v1
+        with:
+          set-env: 'PROVIDER_VERSION'
+      - run: echo "::warning file=.ci-mgmt.yaml,title=Node.js release verification missing::Add the key releaseVerification.nodejs to .ci-mgmt.yaml pointing to the directory containing a Pulumi nodejs project to preview."
+      - run: echo "::warning file=.ci-mgmt.yaml,title=Python release verification missing::Add the key releaseVerification.python to .ci-mgmt.yaml pointing to the directory containing a Pulumi python project to preview."
+      - run: echo "::warning file=.ci-mgmt.yaml,title=Dotnet release verification missing::Add the key releaseVerification.dotnet to .ci-mgmt.yaml pointing to the directory containing a Pulumi dotnet project to preview."
+      - run: echo "::warning file=.ci-mgmt.yaml,title=Go release verification missing::Add the key releaseVerification.python to .ci-mgmt.yaml pointing to the directory containing a Pulumi go project to preview."
