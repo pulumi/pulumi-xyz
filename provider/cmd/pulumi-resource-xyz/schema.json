@@ -59,14 +59,23 @@
             "region": {
                 "type": "string",
                 "$ref": "#/types/xyz:region/region:Region",
-                "description": "A region which should be used.\n",
-                "defaultInfo": {
-                    "environment": [
-                        "XYZ_REGION",
-                        "XYZ_DEFAULT_REGION"
-                    ]
-                }
+                "description": "A region which should be used.\n"
             }
+        }
+    },
+    "types": {
+        "xyz:region/region:Region": {
+            "type": "string",
+            "enum": [
+                {
+                    "name": "here",
+                    "value": "HERE"
+                },
+                {
+                    "name": "overThere",
+                    "value": "OVER_THERE"
+                }
+            ]
         }
     },
     "provider": {
@@ -82,13 +91,7 @@
             "region": {
                 "type": "string",
                 "$ref": "#/types/xyz:region/region:Region",
-                "description": "A region which should be used.\n",
-                "defaultInfo": {
-                    "environment": [
-                        "XYZ_REGION",
-                        "XYZ_DEFAULT_REGION"
-                    ]
-                }
+                "description": "A region which should be used.\n"
             }
         }
     },

@@ -21,6 +21,17 @@ export const Resource: typeof import("./resource").Resource = null as any;
 utilities.lazyLoad(exports, ["Resource"], () => require("./resource"));
 
 
+// Export sub-modules:
+import * as config from "./config";
+import * as region from "./region";
+import * as types from "./types";
+
+export {
+    config,
+    region,
+    types,
+};
+
 const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {

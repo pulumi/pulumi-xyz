@@ -8,6 +8,17 @@ import typing
 from .data_source import *
 from .provider import *
 from .resource import *
+
+# Make subpackages available:
+if typing.TYPE_CHECKING:
+    import pulumi_xyz.config as __config
+    config = __config
+    import pulumi_xyz.region as __region
+    region = __region
+else:
+    config = _utilities.lazy_import('pulumi_xyz.config')
+    region = _utilities.lazy_import('pulumi_xyz.region')
+
 _utilities.register(
     resource_modules="""
 [

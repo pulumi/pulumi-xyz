@@ -8,6 +8,7 @@ import (
 	"reflect"
 
 	"github.com/pulumi/pulumi-xyz/sdk/go/xyz/internal"
+	"github.com/pulumi/pulumi-xyz/sdk/go/xyz/region"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -36,10 +37,14 @@ func NewProvider(ctx *pulumi.Context,
 }
 
 type providerArgs struct {
+	// A region which should be used.
+	Region *region.Region `pulumi:"region"`
 }
 
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
+	// A region which should be used.
+	Region region.RegionPtrInput
 }
 
 func (ProviderArgs) ElementType() reflect.Type {

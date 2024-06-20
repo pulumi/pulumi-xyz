@@ -26,9 +26,8 @@ import (
 
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
-	shim "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim"
 	shimv2 "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim/sdk-v2"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
+	"github.com/pulumi/pulumi/pkg/v3/codegen/schema"
 
 	"github.com/pulumi/pulumi-xyz/provider/pkg/version"
 )
@@ -41,14 +40,6 @@ const (
 	// modules:
 	mainMod = "index" // the xyz module
 )
-
-// preConfigureCallback is called before the providerConfigure function of the underlying provider.
-// It should validate that the provider can be configured, and provide actionable errors in the case
-// it cannot be. Configuration variables can be read from `vars` using the `stringValue` function -
-// for example `stringValue(vars, "accessKey")`.
-func preConfigureCallback(resource.PropertyMap, shim.ResourceConfig) error {
-	return nil
-}
 
 //go:embed cmd/pulumi-resource-xyz/bridge-metadata.json
 var metadata []byte
@@ -94,13 +85,24 @@ func Provider() tfbridge.ProviderInfo {
 		MetadataInfo:     tfbridge.NewProviderMetadata(metadata),
 		Config: map[string]*tfbridge.SchemaInfo{
 			"region": {
-				Type: tfbridge.MakeResource(mainPkg, "region", "Region"),
-				Default: &tfbridge.DefaultInfo{
-					EnvVars: []string{"XYZ_REGION", "XYZ_DEFAULT_REGION"},
+				Type: "xyz:region/region:Region",
+				// TODO[pulumi/pulumi#XXXX]: Go fails to compile when a Config Default value is set.
+				// Default: &tfbridge.DefaultInfo{
+				// 	EnvVars: []string{"XYZ_REGION", "XYZ_DEFAULT_REGION"},
+				// },
+			},
+		},
+		ExtraTypes: map[string]schema.ComplexTypeSpec{
+			"xyz:region/region:Region": {
+				ObjectTypeSpec: schema.ObjectTypeSpec{
+					Type: "string",
+				},
+				Enum: []schema.EnumValueSpec{
+					{Name: "here", Value: "HERE"},
+					{Name: "overThere", Value: "OVER_THERE"},
 				},
 			},
 		},
-		PreConfigureCallback: preConfigureCallback,
 		Resources: map[string]*tfbridge.ResourceInfo{
 			"xyz_resource": {
 				Tok:  tfbridge.MakeResource(mainPkg, mainMod, "Resource"),
@@ -146,6 +148,7 @@ func Provider() tfbridge.ProviderInfo {
 				mainPkg,
 			),
 			GenerateResourceContainerTypes: true,
+			GenerateExtraInputTypes:        true,
 			RespectSchemaVersion:           true,
 		},
 		CSharp: &tfbridge.CSharpInfo{

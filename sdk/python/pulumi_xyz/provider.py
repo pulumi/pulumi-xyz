@@ -8,16 +8,32 @@ import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
 from . import _utilities
+from . import region
 
 __all__ = ['ProviderArgs', 'Provider']
 
 @pulumi.input_type
 class ProviderArgs:
-    def __init__(__self__):
+    def __init__(__self__, *,
+                 region: Optional[pulumi.Input['region.Region']] = None):
         """
         The set of arguments for constructing a Provider resource.
+        :param pulumi.Input['region.Region'] region: A region which should be used.
         """
-        pass
+        if region is not None:
+            pulumi.set(__self__, "region", region)
+
+    @property
+    @pulumi.getter
+    def region(self) -> Optional[pulumi.Input['region.Region']]:
+        """
+        A region which should be used.
+        """
+        return pulumi.get(self, "region")
+
+    @region.setter
+    def region(self, value: Optional[pulumi.Input['region.Region']]):
+        pulumi.set(self, "region", value)
 
 
 class Provider(pulumi.ProviderResource):
@@ -25,6 +41,7 @@ class Provider(pulumi.ProviderResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 region: Optional[pulumi.Input['region.Region']] = None,
                  __props__=None):
         """
         The provider type for the xyz package. By default, resources use package-wide configuration
@@ -34,6 +51,7 @@ class Provider(pulumi.ProviderResource):
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input['region.Region'] region: A region which should be used.
         """
         ...
     @overload
@@ -62,6 +80,7 @@ class Provider(pulumi.ProviderResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 region: Optional[pulumi.Input['region.Region']] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -71,6 +90,7 @@ class Provider(pulumi.ProviderResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ProviderArgs.__new__(ProviderArgs)
 
+            __props__.__dict__["region"] = pulumi.Output.from_input(region).apply(pulumi.runtime.to_json) if region is not None else None
         super(Provider, __self__).__init__(
             'xyz',
             resource_name,
