@@ -15,3 +15,5 @@ plugins:
   - name: terraform
     version: "1.0.15"
     kind: converter
+releaseVerification:
+  nodejs: examples/basic
