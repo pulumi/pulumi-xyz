@@ -54,9 +54,43 @@
             }
         }
     },
-    "config": {},
+    "config": {
+        "variables": {
+            "region": {
+                "type": "string",
+                "$ref": "#/types/xyz:region/region:Region",
+                "description": "A region which should be used.\n",
+                "defaultInfo": {
+                    "environment": [
+                        "XYZ_REGION",
+                        "XYZ_DEFAULT_REGION"
+                    ]
+                }
+            }
+        }
+    },
     "provider": {
-        "description": "The provider type for the xyz package. By default, resources use package-wide configuration\nsettings, however an explicit `Provider` instance may be created and passed during resource\nconstruction to achieve fine-grained programmatic control over provider settings. See the\n[documentation](https://www.pulumi.com/docs/reference/programming-model/#providers) for more information.\n"
+        "description": "The provider type for the xyz package. By default, resources use package-wide configuration\nsettings, however an explicit `Provider` instance may be created and passed during resource\nconstruction to achieve fine-grained programmatic control over provider settings. See the\n[documentation](https://www.pulumi.com/docs/reference/programming-model/#providers) for more information.\n",
+        "properties": {
+            "region": {
+                "type": "string",
+                "$ref": "#/types/xyz:region/region:Region",
+                "description": "A region which should be used.\n"
+            }
+        },
+        "inputProperties": {
+            "region": {
+                "type": "string",
+                "$ref": "#/types/xyz:region/region:Region",
+                "description": "A region which should be used.\n",
+                "defaultInfo": {
+                    "environment": [
+                        "XYZ_REGION",
+                        "XYZ_DEFAULT_REGION"
+                    ]
+                }
+            }
+        }
     },
     "resources": {
         "xyz:index/resource:Resource": {
