@@ -19,7 +19,6 @@ env:
   SIGNING_PASSWORD: ${{ secrets.JAVA_SIGNING_PASSWORD }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   TF_APPEND_USER_AGENT: pulumi
-  XYZ_REGION: us-west-2
 jobs:
   prerequisites:
     uses: ./.github/workflows/prerequisites.yml
