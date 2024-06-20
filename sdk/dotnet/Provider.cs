@@ -45,6 +45,12 @@ namespace Pulumi.Xyz
 
     public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
+        /// <summary>
+        /// A region which should be used.
+        /// </summary>
+        [Input("region", json: true)]
+        public Input<Pulumi.Xyz.Region.Region>? Region { get; set; }
+
         public ProviderArgs()
         {
         }
