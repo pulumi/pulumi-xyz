@@ -1,0 +1,68 @@
+name: "Build Provider"
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+
+jobs:
+  build_provider:
+    name: Build ${{ matrix.platform.os }}-${{ matrix.platform.arch }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        platform:
+          - os: linux
+            arch: amd64
+          - os: linux
+            arch: arm64
+          - os: darwin
+            arch: amd64
+          - os: darwin
+            arch: arm64
+          - os: windows
+            arch: amd64
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Setup tools
+        uses: ./.github/actions/setup-tools
+        with:
+          tools: pulumictl, go
+      - name: Prepare for build
+        shell: bash
+        # This installs plugins and prepares upstream
+        # TODO: Can we just run `make upstream` here?
+        run: make tfgen
+      - name: Go build
+        shell: bash
+        working-directory: provider
+        env:
+          GOOS: ${{ matrix.platform.os }}
+          GOARCH: ${{ matrix.platform.arch }}
+          PROVIDER_PATH: provider
+        # YAML `>` will join consecutive lines with a space
+        run: >
+          go build
+          -p 2
+          -o ${{ github.workspace }}/bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}/pulumi-resource-xyz
+          -ldflags "
+            -X github.com/pulumi/pulumi-xyz/${{ env.PROVIDER_PATH }}/pkg/version.Version=v${{ inputs.version }}
+            "
+          ./cmd/pulumi-resource-xyz
+      - name: Package provider binary
+        shell: bash
+        working-directory: bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}
+        run: >
+          tar --gzip -cf bin/pulumi-resource-xyz-v${{ inputs.version }}-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz
+          README.md LICENCE
+          -C bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }} pulumi-resource-xyz
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulumi-resource-xyz-v${{ inputs.version }}-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz
+          path: bin/pulumi-resource-xyz-v${{ inputs.version }}-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz
+          retention-days: 30
