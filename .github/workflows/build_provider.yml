@@ -1,0 +1,76 @@
+name: "Build Provider"
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+
+jobs:
+  build_provider:
+    name: Build ${{ matrix.platform.os }}-${{ matrix.platform.arch }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        platform:
+          - os: linux
+            arch: amd64
+          - os: linux
+            arch: arm64
+          - os: darwin
+            arch: amd64
+          - os: darwin
+            arch: arm64
+          - os: windows
+            arch: amd64
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Setup tools
+        uses: ./.github/actions/setup-tools
+        with:
+          tools: pulumictl, go
+      - name: Prepare for build
+        shell: bash
+        # This installs plugins and prepares upstream
+        # TODO: Can we just run `make upstream` here?
+        run: make upstream
+      - name: Calc provider path
+        id: provider_path
+        run: |
+          {
+            echo -n "PROVIDER_PATH="
+            echo "provider"
+          } >> "$GITHUB_OUTPUT"
+      - name: Calc ldflags
+        id: ldflags
+        run: |
+          {
+            echo -n "LDFLAGS="
+            echo -n "-X github.com/pulumi/pulumi-xyz/${{ steps.provider_path.outputs.PROVIDER_PATH }}/pkg/version.Version=v${{ inputs.version }}"
+            echo ""
+          } >> "$GITHUB_OUTPUT"
+      - name: Go build
+        shell: bash
+        working-directory: provider
+        env:
+          GOOS: ${{ matrix.platform.os }}
+          GOARCH: ${{ matrix.platform.arch }}
+          PARALLELISM: >-
+            -p 2
+        # YAML `>` will join consecutive lines with a space
+        run: go build ${{ env.PARALLELISM }} -o ${{ github.workspace }}/bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }}/pulumi-resource-xyz -ldflags "${{ steps.ldflags.outputs.LDFLAGS }}" github.com/pulumi/pulumi-xyz/${{ steps.provider_path.outputs.PROVIDER_PATH }}/cmd/pulumi-resource-xyz
+      - name: Package provider binary
+        shell: bash
+        run: >
+          tar --gzip -cf bin/pulumi-resource-xyz-v${{ inputs.version }}-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz
+          README.md LICENCE
+          -C bin/${{ matrix.platform.os }}-${{ matrix.platform.arch }} pulumi-resource-xyz
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulumi-resource-xyz-v${{ inputs.version }}-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz
+          path: bin/pulumi-resource-xyz-v${{ inputs.version }}-${{ matrix.platform.os }}-${{ matrix.platform.arch }}.tar.gz
+          retention-days: 30
