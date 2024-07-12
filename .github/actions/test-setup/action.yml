@@ -1,0 +1,35 @@
+name: "Test Setup"
+description: Sets up repository, tools and SDK ready for running integration tests
+
+inputs:
+  language:
+    required: true
+    description: The SDK language being used for tests
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup tools
+      uses: ./.github/actions/setup-tools
+      with:
+        tools: pulumictl, pulumicli, go, node, dotnet, python, java
+    - name: Download bin
+      uses: ./.github/actions/download-bin
+    - run: dotnet nuget add source ${{ github.workspace }}/nuget
+    - name: Download SDK
+      uses: ./.github/actions/download-sdk
+      with:
+        language: ${{ inputs.language }}
+    - name: Update path
+      run: echo "${{ github.workspace }}/bin" >> "$GITHUB_PATH"
+    - name: Install Python deps
+      run: |-
+        pip3 install virtualenv==20.0.23
+        pip3 install pipenv
+    - name: Install dependencies
+      run: make install_${{ matrix.language}}_sdk
+    - name: Install gotestfmt
+      uses: GoTestTools/gotestfmt-action@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        version: v2.5.0
