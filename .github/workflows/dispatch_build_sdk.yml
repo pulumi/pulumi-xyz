@@ -1,10 +1,6 @@
 name: dispatch-build-sdk
 on:
-    workflow_dispatch:
-        inputs:
-            sdk_version:
-                description: 'SDK version to build'
-                required: true
+    workflow_dispatch: {}
 
 jobs:
     prerequisites:
@@ -43,7 +39,7 @@ jobs:
               committer: pulumi-bot <bot@pulumi.com>
               path: pulumi-sdk
               labels: impact/no-changelog-required
-              title: Publish SDKs for pulumi-xyz version ${{ github.event.inputs.sdk_version }}
+              title: Publish SDKs for pulumi-xyz version ${{ needs.prerequisites.outputs.version }}
               token: ${{ secrets.PULUMI_BOT_TOKEN }}
           - name: Check outputs
             run: |
