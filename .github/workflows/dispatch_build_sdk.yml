@@ -24,6 +24,7 @@ jobs:
           repository: pulumi/pulumi-sdk
           ref: main
           path: pulumi-sdk
+          token: ${{ secrets.PULUMI_BOT_TOKEN }}
       - name: Download bin
         uses: ./.github/actions/download-bin
       - name: Extract schema from plugin binary
