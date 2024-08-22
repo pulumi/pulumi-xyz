@@ -170,12 +170,12 @@ jobs:
         - dotnet
         - go
         - java
-name: master
+name: main
 on:
   workflow_dispatch: {}
   push:
     branches:
-    - master
+    - main
     paths-ignore:
     - "**.md"
     tags-ignore:
