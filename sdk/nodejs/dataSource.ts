@@ -5,7 +5,6 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 export function dataSource(args: DataSourceArgs, opts?: pulumi.InvokeOptions): Promise<DataSourceResult> {
-
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("xyz:index/dataSource:DataSource", {
         "sampleAttribute": args.sampleAttribute,
@@ -30,7 +29,10 @@ export interface DataSourceResult {
     readonly sampleAttribute: string;
 }
 export function dataSourceOutput(args: DataSourceOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<DataSourceResult> {
-    return pulumi.output(args).apply((a: any) => dataSource(a, opts))
+    opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
+    return pulumi.runtime.invokeOutput("xyz:index/dataSource:DataSource", {
+        "sampleAttribute": args.sampleAttribute,
+    }, opts);
 }
 
 /**
