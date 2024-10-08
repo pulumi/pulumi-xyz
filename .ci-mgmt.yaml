@@ -18,3 +18,8 @@ plugins:
     kind: converter
 releaseVerification:
   nodejs: examples/basic
+
+# Test that the disk cleaning works correctly - deleting things can be risky
+freeDiskSpaceBeforeBuild: true
+freeDiskSpaceBeforeTest: true
+freeDiskSpaceBeforeSdkBuild: true
