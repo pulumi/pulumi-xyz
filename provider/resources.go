@@ -22,7 +22,7 @@ import (
 	_ "embed"
 
 	// Replace this provider with the provider you are bridging.
-	xyz "github.com/iwahbe/terraform-provider-xyz/provider"
+	xyz "github.com/pulumi/terraform-provider-xyz/provider"
 
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
@@ -81,7 +81,7 @@ func Provider() tfbridge.ProviderInfo {
 		// The GitHub Org for the provider - defaults to `terraform-providers`. Note that this
 		// should match the TF provider module's require directive, not any replace directives.
 		GitHubOrg:        "",
-		UpstreamRepoPath: "github.com/iwahbe/terraform-provider-xyz",
+		UpstreamRepoPath: "github.com/pulumi/terraform-provider-xyz",
 		MetadataInfo:     tfbridge.NewProviderMetadata(metadata),
 		Config: map[string]*tfbridge.SchemaInfo{
 			"region": {
