@@ -18,6 +18,7 @@ plugins:
     kind: converter
 releaseVerification:
   nodejs: examples/basic
+checkUpstreamUpgrade: false
 
 # Enable these to test that the disk cleaning works correctly
 freeDiskSpaceBeforeBuild: false
