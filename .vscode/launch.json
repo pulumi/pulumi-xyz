@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Provider",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      // Hard code the program so we don't have to have the `main.go` file open.
+      "program": "${workspaceFolder}/provider/cmd/pulumi-resource-xyz",
+      // Specify the build flags as a single string with single quotes to ensure dlv doesn't split the ldflags into separate arguments.
+      "buildFlags": "-ldflags '-X github.com/pulumi/pulumi-xyz/provider/pkg/version.Version=1.0.0-alpha.0+dev'",
+      "env": {
+        "XYZ_REGION": "us-west-2",
+      }
+    }
+  ]
+}
