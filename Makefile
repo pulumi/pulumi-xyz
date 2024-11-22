@@ -27,9 +27,18 @@ LDFLAGS_UPSTREAM_VERSION=
 LDFLAGS_EXTRAS=
 LDFLAGS=$(LDFLAGS_PROJ_VERSION) $(LDFLAGS_UPSTREAM_VERSION) $(LDFLAGS_EXTRAS) $(LDFLAGS_STRIP_SYMBOLS)
 
-development: install_plugins provider build_sdks install_sdks
+# Create a `.make` directory for tracking targets which don't generate a single file output. This should be ignored by git.
+# For targets which either don't generate a single file output, or the output file is committed, we use a "sentinel"
+# file within `.make/` to track the staleness of the target and only rebuild when needed. 
+# For each phony target, we create an internal target with the same name, but prefixed with `.make/` where the work is performed.
+# At the end of each internal target we run `@touch $@` to update the file which is the name of the target.
 
-build: install_plugins provider build_sdks install_sdks
+# Ensure all directories exist before evaluating targets to avoid issues with `touch` creating directories.
+_ := $(shell mkdir -p .make bin .pulumi/bin)
+
+development: .make/install_plugins provider build_sdks install_sdks
+
+build: .make/install_plugins provider build_sdks install_sdks
 
 build_sdks: build_nodejs build_python build_dotnet build_go build_java 
 
@@ -46,7 +55,7 @@ only_build: build
 build_dotnet: export PULUMI_HOME := $(WORKING_DIR)/.pulumi
 build_dotnet: export PATH := $(WORKING_DIR)/.pulumi/bin:$(PATH)
 build_dotnet: export PULUMI_CONVERT_EXAMPLES_CACHE_DIR := $(WORKING_DIR)/.pulumi/examples-cache
-build_dotnet: upstream
+build_dotnet: .make/upstream
 	PULUMI_CONVERT=$(PULUMI_CONVERT) PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION=$(PULUMI_CONVERT) $(WORKING_DIR)/bin/$(TFGEN) dotnet --out sdk/dotnet/
 	cd sdk/dotnet/ && \
 		printf "module fake_dotnet_module // Exclude this directory from Go tools\n\ngo 1.17\n" > go.mod && \
@@ -56,7 +65,7 @@ build_dotnet: upstream
 build_go: export PULUMI_HOME := $(WORKING_DIR)/.pulumi
 build_go: export PATH := $(WORKING_DIR)/.pulumi/bin:$(PATH)
 build_go: export PULUMI_CONVERT_EXAMPLES_CACHE_DIR := $(WORKING_DIR)/.pulumi/examples-cache
-build_go: upstream
+build_go: .make/upstream
 	PULUMI_CONVERT=$(PULUMI_CONVERT) PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION=$(PULUMI_CONVERT) $(WORKING_DIR)/bin/$(TFGEN) go --out sdk/go/
 	cd sdk && go list "$$(grep -e "^module" go.mod | cut -d ' ' -f 2)/go/..." | xargs -I {} bash -c 'go build {} && go clean -i {}'
 
@@ -64,7 +73,7 @@ build_java: PACKAGE_VERSION := $(VERSION_GENERIC)
 build_java: export PULUMI_HOME := $(WORKING_DIR)/.pulumi
 build_java: export PATH := $(WORKING_DIR)/.pulumi/bin:$(PATH)
 build_java: export PULUMI_CONVERT_EXAMPLES_CACHE_DIR := $(WORKING_DIR)/.pulumi/examples-cache
-build_java: bin/pulumi-java-gen upstream
+build_java: bin/pulumi-java-gen .make/upstream
 	$(WORKING_DIR)/bin/$(JAVA_GEN) generate --schema provider/cmd/$(PROVIDER)/schema.json --out sdk/java  --build gradle-nexus
 	cd sdk/java/ && \
 		printf "module fake_java_module // Exclude this directory from Go tools\n\ngo 1.17\n" > go.mod && \
@@ -74,7 +83,7 @@ build_java: bin/pulumi-java-gen upstream
 build_nodejs: export PULUMI_HOME := $(WORKING_DIR)/.pulumi
 build_nodejs: export PATH := $(WORKING_DIR)/.pulumi/bin:$(PATH)
 build_nodejs: export PULUMI_CONVERT_EXAMPLES_CACHE_DIR := $(WORKING_DIR)/.pulumi/examples-cache
-build_nodejs: upstream
+build_nodejs: .make/upstream
 	PULUMI_CONVERT=$(PULUMI_CONVERT) PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION=$(PULUMI_CONVERT) $(WORKING_DIR)/bin/$(TFGEN) nodejs --out sdk/nodejs/
 	cd sdk/nodejs/ && \
 		printf "module fake_nodejs_module // Exclude this directory from Go tools\n\ngo 1.17\n" > go.mod && \
@@ -85,7 +94,7 @@ build_nodejs: upstream
 build_python: export PULUMI_HOME := $(WORKING_DIR)/.pulumi
 build_python: export PATH := $(WORKING_DIR)/.pulumi/bin:$(PATH)
 build_python: export PULUMI_CONVERT_EXAMPLES_CACHE_DIR := $(WORKING_DIR)/.pulumi/examples-cache
-build_python: upstream
+build_python: .make/upstream
 	rm -rf sdk/python/
 	PULUMI_CONVERT=$(PULUMI_CONVERT) PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION=$(PULUMI_CONVERT) $(WORKING_DIR)/bin/$(TFGEN) python --out sdk/python/
 	cd sdk/python/ && \
@@ -98,17 +107,11 @@ build_python: upstream
 		cd ./bin && \
 		../venv/bin/python -m build .
 
+.PHONY: clean
 clean:
 	rm -rf sdk/{dotnet,nodejs,go,python}
-
-cleanup:
-	rm -r $(WORKING_DIR)/bin
-	rm -f provider/cmd/$(PROVIDER)/schema.go
-
-help:
-	@grep '^[^.#]\+:\s\+.*#' Makefile | \
-	sed "s/\(.\+\):\s*\(.*\) #\s*\(.*\)/`printf "\033[93m"`\1`printf "\033[0m"`	\3 [\2]/" | \
-	expand -t20
+	rm -rf bin/*
+	rm -rf .make/*
 
 install_dotnet_sdk:
 	mkdir -p $(WORKING_DIR)/nuget
@@ -117,12 +120,15 @@ install_dotnet_sdk:
 install_nodejs_sdk:
 	yarn link --cwd $(WORKING_DIR)/sdk/nodejs/bin
 
-install_plugins: export PULUMI_HOME := $(WORKING_DIR)/.pulumi
-install_plugins: export PATH := $(WORKING_DIR)/.pulumi/bin:$(PATH)
-install_plugins: .pulumi/bin/pulumi
+.PHONY: install_plugins
+install_plugins: .make/install_plugins
+.make/install_plugins: export PULUMI_HOME := $(WORKING_DIR)/.pulumi
+.make/install_plugins: export PATH := $(WORKING_DIR)/.pulumi/bin:$(PATH)
+.make/install_plugins: .pulumi/bin/pulumi
 	.pulumi/bin/pulumi plugin install resource random 4.8.2
 	.pulumi/bin/pulumi plugin install resource std 1.6.2
 	.pulumi/bin/pulumi plugin install converter terraform 1.0.15
+	@touch $@
 
 lint_provider: provider
 	cd provider && golangci-lint run --path-prefix provider -c ../.golangci.yml
@@ -138,7 +144,7 @@ lint_provider.fix:
 provider_no_deps:
 	(cd provider && go build $(PULUMI_PROVIDER_BUILD_PARALLELISM) -o $(WORKING_DIR)/bin/$(PROVIDER) -ldflags "$(LDFLAGS)" $(PROJECT)/$(PROVIDER_PATH)/cmd/$(PROVIDER))
 
-provider: tfgen provider_no_deps
+provider: .make/gen provider_no_deps
 
 test: export PATH := $(WORKING_DIR)/bin:$(PATH)
 test:
@@ -150,25 +156,36 @@ test_provider:
 	@echo ""
 	cd provider && go test -v -short ./... -parallel $(TESTPARALLELISM)
 
-tfgen: install_plugins upstream tfgen_no_deps
+.PHONY: tfgen gen tfgen_no_deps tfgen_build_only
+tfgen: gen
+gen: .make/gen .make/build_registry_docs 
 
-tfgen_no_deps: export PULUMI_HOME := $(WORKING_DIR)/.pulumi
-tfgen_no_deps: export PATH := $(WORKING_DIR)/.pulumi/bin:$(PATH)
-tfgen_no_deps: export PULUMI_CONVERT := $(PULUMI_CONVERT)
-tfgen_no_deps: export PULUMI_CONVERT_EXAMPLES_CACHE_DIR := $(WORKING_DIR)/.pulumi/examples-cache
-tfgen_no_deps: export PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION := $(PULUMI_CONVERT)
-tfgen_no_deps: export PULUMI_MISSING_DOCS_ERROR := $(PULUMI_MISSING_DOCS_ERROR)
-tfgen_no_deps: tfgen_build_only
+tfgen_no_deps: .make/gen
+
+.make/gen: export PULUMI_HOME := $(WORKING_DIR)/.pulumi
+.make/gen: export PATH := $(WORKING_DIR)/.pulumi/bin:$(PATH)
+.make/gen: export PULUMI_CONVERT := $(PULUMI_CONVERT)
+.make/gen: export PULUMI_CONVERT_EXAMPLES_CACHE_DIR := $(WORKING_DIR)/.pulumi/examples-cache
+.make/gen: export PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION := $(PULUMI_CONVERT)
+.make/gen: export PULUMI_MISSING_DOCS_ERROR := $(PULUMI_MISSING_DOCS_ERROR)
+.make/gen: bin/$(TFGEN) provider/resources.go provider/go.mod .git/modules/upstream/HEAD .make/install_plugins .make/upstream
 	$(WORKING_DIR)/bin/$(TFGEN) schema --out provider/cmd/$(PROVIDER)
 	(cd provider && VERSION=$(VERSION_GENERIC) go generate cmd/$(PROVIDER)/main.go)
+	@touch $@
 
-tfgen_build_only:
+tfgen_build_only: bin/$(TFGEN)
+
+bin/$(TFGEN):
 	(cd provider && go build $(PULUMI_PROVIDER_BUILD_PARALLELISM) -o $(WORKING_DIR)/bin/$(TFGEN) -ldflags "$(LDFLAGS_PROJ_VERSION) $(LDFLAGS_EXTRAS)" $(PROJECT)/$(PROVIDER_PATH)/cmd/$(TFGEN))
 
-upstream:
+.PHONY: upstream
+upstream: .make/upstream
+# Re-run if the upstream commit or the patches change
+.make/upstream: patches/* .git/modules/upstream/HEAD
 ifneq ("$(wildcard upstream)","")
 	./upstream.sh init
 endif
+	@touch $@
 
 bin/pulumi-java-gen: .pulumi-java-gen.version
 	pulumictl download-binary -n pulumi-language-java -v v$(shell cat .pulumi-java-gen.version) -r pulumi/pulumi-java
@@ -190,6 +207,7 @@ ci-mgmt: .ci-mgmt.yaml
 .pulumi/bin/pulumi: .pulumi/version
 	@if [ -x .pulumi/bin/pulumi ] && [ "v$$(cat .pulumi/version)" = "$$(.pulumi/bin/pulumi version)" ]; then \
 		echo "pulumi/bin/pulumi version: v$$(cat .pulumi/version)"; \
+		touch $@; \
 	else \
 		curl -fsSL https://get.pulumi.com | \
 			HOME=$(WORKING_DIR) sh -s -- --version "$$(cat .pulumi/version)"; \
@@ -197,14 +215,13 @@ ci-mgmt: .ci-mgmt.yaml
 
 # Compute the version of Pulumi to use by inspecting the Go dependencies of the provider.
 .pulumi/version: provider/go.mod
-	@mkdir -p .pulumi
-	@cd provider && go list -f "{{slice .Version 1}}" -m github.com/pulumi/pulumi/pkg/v3 | tee ../$@
+	cd provider && go list -f "{{slice .Version 1}}" -m github.com/pulumi/pulumi/pkg/v3 | tee ../$@
 
 # Start debug server for tfgen
 debug_tfgen:
 	dlv  --listen=:2345 --headless=true --api-version=2  exec $(WORKING_DIR)/bin/$(TFGEN) -- schema --out provider/cmd/$(PROVIDER)
 
-.PHONY: development build build_sdks install_go_sdk install_java_sdk install_python_sdk install_sdks only_build build_dotnet build_go build_java build_nodejs build_python clean cleanup help install_dotnet_sdk install_nodejs_sdk install_plugins lint_provider provider provider_no_deps test tfgen upstream ci-mgmt test_provider debug_tfgen tfgen_build_only
+.PHONY: development build build_sdks install_go_sdk install_java_sdk install_python_sdk install_sdks only_build build_dotnet build_go build_java build_nodejs build_python help install_dotnet_sdk install_nodejs_sdk lint_provider provider provider_no_deps test ci-mgmt test_provider debug_tfgen
 
 # Provider cross-platform build & packaging
 
