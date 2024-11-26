@@ -48,7 +48,7 @@ jobs:
       uses: actions/checkout@v4.2.2
       with:
         persist-credentials: false
-    - uses: pulumi/provider-version-action@v1
+    - uses: pulumi/provider-version-action@7c54f136703646f7d6eaa3d3b3c877e5a805d6ab # v1
       id: provider-version
       with:
         set-env: 'PROVIDER_VERSION'
