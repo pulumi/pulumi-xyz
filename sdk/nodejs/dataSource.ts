@@ -28,7 +28,7 @@ export interface DataSourceResult {
     readonly id: string;
     readonly sampleAttribute: string;
 }
-export function dataSourceOutput(args: DataSourceOutputArgs, opts?: pulumi.InvokeOptions): pulumi.Output<DataSourceResult> {
+export function dataSourceOutput(args: DataSourceOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<DataSourceResult> {
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invokeOutput("xyz:index/dataSource:DataSource", {
         "sampleAttribute": args.sampleAttribute,
