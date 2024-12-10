@@ -24,3 +24,4 @@ checkUpstreamUpgrade: true
 freeDiskSpaceBeforeBuild: false
 freeDiskSpaceBeforeTest: false
 freeDiskSpaceBeforeSdkBuild: false
+publishRegistry: false
