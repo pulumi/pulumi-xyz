@@ -229,7 +229,11 @@ test:
 .PHONY: test
 
 test_provider:
-	cd provider && go test -v -short ./... -parallel $(TESTPARALLELISM)
+	go test -v -short \
+		-coverprofile="coverage.txt" \
+		-coverpkg="./...,github.com/hashicorp/terraform-provider-..." \
+		-parallel $(TESTPARALLELISM) \
+		./provider/...
 .PHONY: test_provider
 
 tfgen: schema
