@@ -34,21 +34,11 @@ type DataSourceResult struct {
 }
 
 func DataSourceOutput(ctx *pulumi.Context, args DataSourceOutputArgs, opts ...pulumi.InvokeOption) DataSourceResultOutput {
-	return pulumi.ToOutputWithContext(context.Background(), args).
+	return pulumi.ToOutputWithContext(ctx.Context(), args).
 		ApplyT(func(v interface{}) (DataSourceResultOutput, error) {
 			args := v.(DataSourceArgs)
-			opts = internal.PkgInvokeDefaultOpts(opts)
-			var rv DataSourceResult
-			secret, err := ctx.InvokePackageRaw("xyz:index/dataSource:DataSource", args, &rv, "", opts...)
-			if err != nil {
-				return DataSourceResultOutput{}, err
-			}
-
-			output := pulumi.ToOutput(rv).(DataSourceResultOutput)
-			if secret {
-				return pulumi.ToSecret(output).(DataSourceResultOutput), nil
-			}
-			return output, nil
+			options := pulumi.InvokeOutputOptions{InvokeOptions: internal.PkgInvokeDefaultOpts(opts)}
+			return ctx.InvokeOutput("xyz:index/dataSource:DataSource", args, DataSourceResultOutput{}, options).(DataSourceResultOutput), nil
 		}).(DataSourceResultOutput)
 }
 

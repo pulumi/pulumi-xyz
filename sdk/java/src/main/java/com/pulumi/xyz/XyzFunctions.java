@@ -7,6 +7,7 @@ import com.pulumi.core.Output;
 import com.pulumi.core.TypeShape;
 import com.pulumi.deployment.Deployment;
 import com.pulumi.deployment.InvokeOptions;
+import com.pulumi.deployment.InvokeOutputOptions;
 import com.pulumi.xyz.Utilities;
 import com.pulumi.xyz.inputs.DataSourceArgs;
 import com.pulumi.xyz.inputs.DataSourcePlainArgs;
@@ -21,6 +22,9 @@ public final class XyzFunctions {
         return dataSourcePlain(args, InvokeOptions.Empty);
     }
     public static Output<DataSourceResult> dataSource(DataSourceArgs args, InvokeOptions options) {
+        return Deployment.getInstance().invoke("xyz:index/dataSource:DataSource", TypeShape.of(DataSourceResult.class), args, Utilities.withVersion(options));
+    }
+    public static Output<DataSourceResult> dataSource(DataSourceArgs args, InvokeOutputOptions options) {
         return Deployment.getInstance().invoke("xyz:index/dataSource:DataSource", TypeShape.of(DataSourceResult.class), args, Utilities.withVersion(options));
     }
     public static CompletableFuture<DataSourceResult> dataSourcePlain(DataSourcePlainArgs args, InvokeOptions options) {
