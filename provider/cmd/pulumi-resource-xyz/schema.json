@@ -87,6 +87,9 @@
                 "$ref": "#/types/xyz:region/region:Region",
                 "description": "A region which should be used.\n"
             }
+        },
+        "methods": {
+            "terraformConfig": "pulumi:providers:xyz/terraformConfig"
         }
     },
     "resources": {
@@ -116,6 +119,35 @@
         }
     },
     "functions": {
+        "pulumi:providers:xyz/terraformConfig": {
+            "description": "This function returns a Terraform config object with terraform-namecased keys,to be used with the Terraform Module Provider.",
+            "inputs": {
+                "properties": {
+                    "__self__": {
+                        "type": "ref",
+                        "$ref": "#/resources/pulumi:providers:xyz"
+                    }
+                },
+                "type": "pulumi:providers:xyz/terraformConfig",
+                "required": [
+                    "__self__"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "result": {
+                        "additionalProperties": {
+                            "$ref": "pulumi.json#/Any"
+                        },
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "result"
+                ],
+                "type": "object"
+            }
+        },
         "xyz:index/dataSource:DataSource": {
             "inputs": {
                 "description": "A collection of arguments for invoking DataSource.\n",
