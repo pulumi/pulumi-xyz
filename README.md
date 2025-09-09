@@ -53,3 +53,7 @@ The following configuration points are available for the `xyz` provider:
 ## Reference
 
 For detailed reference documentation, please visit [the Pulumi registry](https://www.pulumi.com/registry/packages/xyz/api-docs/).
+
+---
+
+**Dad Joke Corner**: Why don't infrastructure engineers ever get lost? Because they always know their way around the cloud! ☁️
