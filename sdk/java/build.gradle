@@ -12,7 +12,7 @@ group = "com.pulumi"
 
 def resolvedVersion = System.getenv("PACKAGE_VERSION") ?:
     (project.version == "unspecified"
-         ? "1.2.0-alpha.1757961264+1594999"
+         ? "1.2.0-alpha.1757961446+c70849e"
          : project.version)
 
 def signingKey = System.getenv("SIGNING_KEY")
