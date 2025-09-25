@@ -12,6 +12,7 @@ env:
   PULUMI_MISSING_DOCS_ERROR: "true"
   TF_APPEND_USER_AGENT: pulumi
   XYZ_REGION: us-west-2
+  MISE_WINDOWS_EXECUTABLE_EXTENSIONS: ",exe,bat,cmd,com,ps1,vbs"
 
 jobs:
   verify-release:
@@ -20,8 +21,6 @@ jobs:
       matrix:
         runner: ["ubuntu-latest", "windows-latest", "macos-latest"]
     runs-on: ${{ matrix.runner }}
-    env:
-      MISE_WINDOWS_EXECUTABLE_EXTENSIONS: ",exe,bat,cmd,com,ps1,vbs"
     permissions:
       contents: 'read'
       id-token: 'write'
