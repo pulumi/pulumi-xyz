@@ -22,7 +22,7 @@ Param(
       Select-Object -First 1
   $pulumiVersion = $pulumiVersion.TrimStart('v')
 
-  # Go version (prefer toolchain, fall back to go line)
+  # Go version (prefer toolchain directive)
   $goToolchain = $lines |
       Where-Object { $_ -match '^toolchain\s+go[0-9]' } |
       Select-Object -First 1
@@ -38,8 +38,5 @@ Param(
       $goVersion = ($goLine -split '\s+')[-1]
   }
 
-  if ($Name -eq 'go') {
-      Write-Output $goVersion
-  } elseif ($Name -eq 'pulumi') {
-      Write-Output $pulumiVersion
-  }
+  if ($Name -eq 'go')      { Write-Output $goVersion }
+  elseif ($Name -eq 'pulumi') { Write-Output $pulumiVersion }
