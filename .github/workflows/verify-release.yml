@@ -80,37 +80,37 @@ jobs:
           Test-Path $shim
           cmd /c "where bash"
 
-      - name: Install mise manually
-        if: matrix.runner == 'windows-latest'
-        shell: pwsh
-        run: |
-          $version = 'v2025.7.12'
-          $zip     = Join-Path $env:RUNNER_TEMP "mise-$version.zip"
-          $dest    = Join-Path $env:RUNNER_TEMP "mise-extracted"
-          $shimDir = Join-Path $env:RUNNER_TEMP "mise-shims"
-
-          Invoke-WebRequest `
-            -Uri "https://github.com/jdx/mise/releases/download/$version/mise-$version-windows-x64.zip" `
-            -OutFile $zip
-
-          Expand-Archive -Path $zip -DestinationPath $dest -Force
-          Get-ChildItem $dest -Recurse | ForEach-Object {
-            Move-Item $_.FullName -Destination $shimDir -Force
-          }
-      - name: Verify mise
-        if: matrix.runner == 'windows-latest'
-        env:
-          MISE_LOG_LEVEL: info
-          MISE_TRUSTED_CONFIG_PATHS: /Users/runner/work/pulumi-xyz/pulumi-xyz
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MISE_YES: 1
-        shell: pwsh
-        run: |
-          mise --version
-          mise doctor
-          mise install
-          mise ls
-          mise env --json
+      # - name: Install mise manually
+      #   if: matrix.runner == 'windows-latest'
+      #   shell: pwsh
+      #   run: |
+      #     $version = 'v2025.7.12'
+      #     $zip     = Join-Path $env:RUNNER_TEMP "mise-$version.zip"
+      #     $dest    = Join-Path $env:RUNNER_TEMP "mise-extracted"
+      #     $shimDir = Join-Path $env:RUNNER_TEMP "mise-shims"
+      #
+      #     Invoke-WebRequest `
+      #       -Uri "https://github.com/jdx/mise/releases/download/$version/mise-$version-windows-x64.zip" `
+      #       -OutFile $zip
+      #
+      #     Expand-Archive -Path $zip -DestinationPath $dest -Force
+      #     Get-ChildItem $dest -Recurse | ForEach-Object {
+      #       Move-Item $_.FullName -Destination $shimDir -Force
+      #     }
+      # - name: Verify mise
+      #   if: matrix.runner == 'windows-latest'
+      #   env:
+      #     MISE_LOG_LEVEL: info
+      #     MISE_TRUSTED_CONFIG_PATHS: /Users/runner/work/pulumi-xyz/pulumi-xyz
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     MISE_YES: 1
+      #   shell: pwsh
+      #   run: |
+      #     mise --version
+      #     mise doctor
+      #     mise install
+      #     mise ls
+      #     mise env --json
 
       - name: Setup mise
         uses: jdx/mise-action@5ac50f778e26fac95da98d50503682459e86d566 # v3
