@@ -3,9 +3,8 @@
 
 [env]
   {% if os_family() == "windows" %}
-  {% set versions = exec(command="pwsh -NoProfile -File {{config_root}}/scripts/get-versions.ps1") | trim | split(pat="\n") %}
-  GO_VERSION = "{{ versions | find(pat='^GO_VERSION=') | replace(from='GO_VERSION=', to='') }}"
-  PULUMI_VERSION = "{{ versions | find(pat='^PULUMI_VERSION=') | replace(from='PULUMI_VERSION=', to='') }}"
+  GO_VERSION = "{{ exec(command="pwsh -NoProfile -File {{config_root}}/scripts/get-versions.ps1 -Name go") | trim }}"
+  PULUMI_VERSION = "{{ exec(command="pwsh -NoProfile -File {{config_root}}/scripts/get-versions.ps1 -Name pulumi") | trim }}"
   {% else %}
   _.source = "{{config_root}}/scripts/get-versions.sh"
   {% endif %}
