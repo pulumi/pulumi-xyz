@@ -20,6 +20,8 @@ jobs:
       matrix:
         runner: ["ubuntu-latest", "windows-latest", "macos-latest"]
     runs-on: ${{ matrix.runner }}
+    env:
+      MISE_WINDOWS_EXECUTABLE_EXTENSIONS: ",exe,bat,cmd,com,ps1,vbs"
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -52,8 +54,6 @@ jobs:
 
       - name: Setup mise
         uses: jdx/mise-action@5ac50f778e26fac95da98d50503682459e86d566 # v3
-        env:
-          MISE_WINDOWS_EXECUTABLE_EXTENSIONS: ",exe,bat,cmd,com,ps1,vbs"
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           cache_key: "mise-{{platform}}-{{file_hash}}"
