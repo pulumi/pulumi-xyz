@@ -2,10 +2,16 @@
 # You can create your own root-level mise.toml file to override/augment this. See https://mise.jdx.dev/configuration.html
 
 [env]
-GO_VERSION = '{{ if os_family() == "windows" }}{{ exec(command="pwsh -NoProfile -File \"{{config_root}}/scripts/get-versions.ps1\" -Name go") | trim }}{{ else }}{{ exec(command="bash
---noprofile -c '. \"{{config_root}}/scripts/get-versions.sh\" >/dev/null && printf %s \"$GO_VERSION\"'") | trim }}{{ endif }}'
-PULUMI_VERSION = '{{ if os_family() == "windows" }}{{ exec(command="pwsh -NoProfile -File \"{{config_root}}/scripts/get-versions.ps1\" -Name pulumi") | trim }}{{ else }}
-{{ exec(command="bash --noprofile -c '. \"{{config_root}}/scripts/get-versions.sh\" >/dev/null && printf %s \"$PULUMI_VERSION\"'") | trim }}{{ endif }}'
+GO_VERSION = """{{ if os_family() == "windows" }}
+  {{ exec(command='pwsh -NoProfile -File "{{config_root}}/scripts/get-versions.ps1" -Name go') | trim }}
+  {{ else }}
+  {{ exec(command='bash --noprofile -c ''. "{{config_root}}/scripts/get-versions.sh" >/dev/null && printf %s "$GO_VERSION"''') | trim }}
+  {{ endif }}"""
+PULUMI_VERSION = """{{ if os_family() == "windows" }}
+  {{ exec(command='pwsh -NoProfile -File "{{config_root}}/scripts/get-versions.ps1" -Name pulumi') | trim }}
+  {{ else }}
+  {{ exec(command='bash --noprofile -c ''. "{{config_root}}/scripts/get-versions.sh" >/dev/null && printf %s "$PULUMI_VERSION"''') | trim }}
+  {{ endif }}"""
 
 [tools]
 
