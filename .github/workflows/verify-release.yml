@@ -75,16 +75,19 @@ jobs:
         run: |
           $version = 'v2025.7.12'
           $zip     = Join-Path $env:RUNNER_TEMP "mise-$version.zip"
-          $dest    = Join-Path $env:RUNNER_TEMP "mise-$version"
+          $tmpDir  = Join-Path $env:RUNNER_TEMP "mise-extracted"
+          $shimDir = Join-Path $env:RUNNER_TEMP "mise-shims"  # already on PATH from the shim step
 
+          # Download and unpack the release
           Invoke-WebRequest `
             -Uri "https://github.com/jdx/mise/releases/download/$version/mise-$version-windows-x64.zip" `
             -OutFile $zip
+          Expand-Archive -Path $zip -DestinationPath $tmpDir -Force
 
-          Expand-Archive -Path $zip -DestinationPath $dest -Force
-
-          # the zip contains mise.exe and supporting files directly in $dest
-          Add-Content -Path $env:GITHUB_PATH -Value $dest
+          # Move everything from the archive into the shim directory
+          Get-ChildItem $tmpDir | ForEach-Object {
+            Move-Item -Path $_.FullName -Destination $shimDir -Force
+          }
 
       - name: Verify mise
         if: matrix.runner == 'windows-latest'
