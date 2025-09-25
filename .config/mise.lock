@@ -42,7 +42,7 @@ version = "20.19.5"
 backend = "core:node"
 
 [[tools.pulumi]]
-version = "3.197.0"
+version = "3.190.0"
 backend = "aqua:pulumi/pulumi"
 
 [[tools.python]]
