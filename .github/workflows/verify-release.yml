@@ -40,6 +40,7 @@ jobs:
         name: Fetch secrets from ESC
         uses: pulumi/esc-action@9eb774255b1a4afb7855678ae8d4a77359da0d9b
       - name: Provide bash shim for mise
+        if: matrix.runner == 'windows-latest'
         shell: pwsh
         run: |
           $bash = "${env:ProgramFiles}\Git\bin\bash.exe"
