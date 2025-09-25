@@ -38,7 +38,7 @@ size = 195648709
 url = "https://corretto.aws/downloads/resources/11.0.28.6.1/amazon-corretto-11.0.28.6.1-linux-x64.tar.gz"
 
 [[tools.node]]
-version = "24.1.0"
+version = "20.19.5"
 backend = "core:node"
 
 [[tools.pulumi]]
@@ -46,5 +46,5 @@ version = "3.197.0"
 backend = "aqua:pulumi/pulumi"
 
 [[tools.python]]
-version = "3.12.11"
+version = "3.11.8"
 backend = "core:python"

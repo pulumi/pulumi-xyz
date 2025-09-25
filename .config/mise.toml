@@ -10,8 +10,8 @@
 # TODO: we may not need `get_env` once https://github.com/jdx/mise/discussions/6339 is fixed
 # go = "{{ get_env(name='GO_VERSION', default='latest') }}"
 go = "1.24"
-node = '24'
-python = '3.12'
+node = '20'
+python = '3.11.8'
 dotnet = '8.0'
 # Corretto version used as Java SE/OpenJDK version no longer offered
 java = 'corretto-11'
