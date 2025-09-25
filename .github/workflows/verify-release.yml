@@ -73,17 +73,18 @@ jobs:
         if: matrix.runner == 'windows-latest'
         shell: pwsh
         run: |
-          $version    = 'v2025.7.12'
-          $zip        = Join-Path $env:RUNNER_TEMP "mise-$version.zip"
-          $installDir = Join-Path $env:RUNNER_TEMP "mise-$version"
+          $version = 'v2025.7.12'
+          $zip     = Join-Path $env:RUNNER_TEMP "mise-$version.zip"
+          $dest    = Join-Path $env:RUNNER_TEMP "mise-$version"
 
           Invoke-WebRequest `
             -Uri "https://github.com/jdx/mise/releases/download/$version/mise-$version-windows-x64.zip" `
             -OutFile $zip
 
-          Expand-Archive -Path $zip -DestinationPath $installDir -Force
+          Expand-Archive -Path $zip -DestinationPath $dest -Force
 
-          Add-Content -Path $env:GITHUB_PATH -Value (Join-Path $installDir 'mise.exe')
+          # the zip contains mise.exe and supporting files directly in $dest
+          Add-Content -Path $env:GITHUB_PATH -Value $dest
 
       - name: Verify mise
         if: matrix.runner == 'windows-latest'
