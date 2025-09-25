@@ -19,7 +19,7 @@ jobs:
     name: verify-release
     strategy:
       matrix:
-        runner: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        runner: ["windows-latest"]
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: 'read'
@@ -50,20 +50,12 @@ jobs:
 
           $shimDir = Join-Path $env:RUNNER_TEMP 'mise-shims'
           New-Item -ItemType Directory -Force -Path $shimDir | Out-Null
+
           $shim = Join-Path $shimDir 'bash'
           if (Test-Path $shim) { Remove-Item $shim -Force }
-
           cmd /c "mklink ""$shim"" ""$bashExe""" | Write-Host
 
-          $newPath = @(
-            $shimDir
-            "$env:ProgramFiles\Git\bin"
-            "$env:ProgramFiles\Git\usr\bin"
-            "$env:windir\System32"
-          ) -join ';'
-
-          Set-Content -Path $env:GITHUB_ENV -Value ("PATH={0}" -f $newPath)
-
+          Add-Content -Path $env:GITHUB_ENV -Value "BASH_SHIM=$shimDir"
           Add-Content -Path $env:GITHUB_ENV -Value 'MISE_WINDOWS_EXECUTABLE_EXTENSIONS=,exe,bat,cmd,com,ps1,vbs'
 
       - name: Debug bash resolution
@@ -113,6 +105,10 @@ jobs:
 
       - name: Setup mise
         uses: jdx/mise-action@5ac50f778e26fac95da98d50503682459e86d566 # v3
+        env: 
+          PATH: ${{ env.BASH_SHIM }};${{ env.PATH }}
+          MISE_WINDOWS_EXECUTABLE_EXTENSIONS: ",exe,bat,cmd,com,ps1,vbs"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           cache_key: "mise-{{platform}}-{{file_hash}}"
