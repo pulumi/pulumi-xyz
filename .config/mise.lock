@@ -24,6 +24,10 @@ url = "https://github.com/pulumi/schema-tools/releases/download/v0.6.0/schema-to
 version = "1.24.6"
 backend = "core:go"
 
+[[tools.gradle]]
+version = "7.6.6"
+backend = "aqua:gradle/gradle"
+
 [[tools.java]]
 version = "corretto-11.0.28.6.1"
 backend = "core:java"
@@ -36,6 +40,10 @@ url = "https://corretto.aws/downloads/resources/11.0.28.6.1/amazon-corretto-11.0
 [[tools.node]]
 version = "24.1.0"
 backend = "core:node"
+
+[[tools.pulumi]]
+version = "3.197.0"
+backend = "aqua:pulumi/pulumi"
 
 [[tools.python]]
 version = "3.12.11"
