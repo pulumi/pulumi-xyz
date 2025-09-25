@@ -44,12 +44,13 @@ jobs:
         if: matrix.runner == 'windows-latest'
         shell: pwsh
         run: |
-          $bash = "${env:ProgramFiles}\Git\bin\bash.exe"
-          if (!(Test-Path $bash)) { throw "Git Bash missing" }
-          $shim = Join-Path $env:RUNNER_TEMP "mise-shims"
-          New-Item -ItemType Directory -Force -Path $shim | Out-Null
-          Copy-Item $bash (Join-Path $shim "bash") -Force
-          Add-Content -Path $env:GITHUB_PATH -Value $shim
+              $bash = "${env:ProgramFiles}\Git\bin\bash.exe"
+              if (!(Test-Path $bash)) { throw "Git Bash missing" }
+              $shim = Join-Path $env:RUNNER_TEMP "mise-shims"
+              New-Item -ItemType Directory -Force -Path $shim | Out-Null
+              Copy-Item $bash (Join-Path $shim "bash") -Force
+              Add-Content -Path $env:GITHUB_ENV -Value ("PATH=" + $shim + ";" + $env:PATH)
+              Add-Content -Path $env:GITHUB_ENV -Value 'MISE_WINDOWS_EXECUTABLE_EXTENSIONS=,exe,bat,cmd,com,ps1,vbs'
 
       - name: Setup mise
         uses: jdx/mise-action@5ac50f778e26fac95da98d50503682459e86d566 # v3
