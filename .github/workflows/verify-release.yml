@@ -53,8 +53,9 @@ jobs:
 
           $shim = Join-Path $shimDir 'bash'
           if (Test-Path $shim) { Remove-Item $shim -Force }
-          cmd /c "mklink ""$shim"" ""$bashExe""" | Write-Host
+          cmd /c "mklink ""$shim"" ""$bashExe"""
 
+          Add-Content -Path $env:GITHUB_ENV -Value "PATH_ORIG=$($env:PATH)"
           Add-Content -Path $env:GITHUB_ENV -Value "BASH_SHIM=$shimDir"
           Add-Content -Path $env:GITHUB_ENV -Value 'MISE_WINDOWS_EXECUTABLE_EXTENSIONS=,exe,bat,cmd,com,ps1,vbs'
 
@@ -106,7 +107,7 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@5ac50f778e26fac95da98d50503682459e86d566 # v3
         env: 
-          PATH: ${{ env.BASH_SHIM }};${{ env.PATH }}
+          PATH: ${{ env.BASH_SHIM }};${{ env.PATH_ORIG }}
           MISE_WINDOWS_EXECUTABLE_EXTENSIONS: ",exe,bat,cmd,com,ps1,vbs"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
