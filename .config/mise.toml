@@ -2,14 +2,14 @@
 # You can create your own root-level mise.toml file to override/augment this. See https://mise.jdx.dev/configuration.html
 
 # [env]
-# _.source = "{{config_root}}/scripts/get-versions.sh"
+_.source = "{{config_root}}/scripts/get-versions.sh"
 
 [tools]
 
 # Runtimes
 # TODO: we may not need `get_env` once https://github.com/jdx/mise/discussions/6339 is fixed
-# go = "{{ get_env(name='GO_VERSION', default='latest') }}"
-go = "1.24"
+go = "{{ get_env(name='GO_VERSION', default='latest') }}"
+# go = "1.24"
 node = '20'
 python = '3.11.8'
 dotnet = '8.0'
