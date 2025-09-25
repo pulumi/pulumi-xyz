@@ -40,6 +40,33 @@ jobs:
         id: esc-secrets
         name: Fetch secrets from ESC
         uses: pulumi/esc-action@9eb774255b1a4afb7855678ae8d4a77359da0d9b
+
+      - name: Provide bash shim for mise
+        if: matrix.runner == 'windows-latest'
+        shell: pwsh
+        run: |
+          $bashExe = "${env:ProgramFiles}\Git\bin\bash.exe"
+          if (!(Test-Path $bashExe)) {
+            throw "Git Bash not found at $bashExe"
+          }
+
+          $shimDir = Join-Path $env:RUNNER_TEMP 'mise-shims'
+          New-Item -ItemType Directory -Force -Path $shimDir | Out-Null
+
+          $shim = Join-Path $shimDir 'bash'
+          if (Test-Path $shim) { Remove-Item $shim -Force }
+
+          cmd /c "mklink ""$shim"" ""$bashExe""" | Write-Host
+
+          Add-Content -Path $env:GITHUB_ENV -Value ("PATH={0};{1}" -f $shimDir, $env:PATH)
+          Add-Content -Path $env:GITHUB_ENV -Value 'MISE_WINDOWS_EXECUTABLE_EXTENSIONS=,exe,bat,cmd,com,ps1,vbs'
+
+          Write-Host "=== shim dir contents ==="
+          Get-ChildItem $shimDir -Force | Format-List
+
+          Write-Host "=== where bash ==="
+          cmd /c "where bash"
+
       - name: Debug bash resolution
         if: matrix.runner == 'windows-latest'
         shell: pwsh
@@ -53,42 +80,23 @@ jobs:
           Test-Path $shim
           cmd /c "where bash"
 
-      - name: Provide bash shim for mise
-        if: matrix.runner == 'windows-latest'
-        shell: pwsh
-        run: |
-              $bashExe = "${env:ProgramFiles}\Git\bin\bash.exe"
-              if (!(Test-Path $bashExe)) { throw "Git Bash missing at $bashExe" }
-
-              $shimDir = Join-Path $env:RUNNER_TEMP "mise-shims"
-              New-Item -ItemType Directory -Force -Path $shimDir | Out-Null
-
-              $shim = Join-Path $shimDir "bash"
-              Remove-Item $shim -Force -ErrorAction SilentlyContinue
-              New-Item -ItemType SymbolicLink -Path $shim -Target $bashExe | Out-Null
-
-              Add-Content -Path $env:GITHUB_ENV -Value ("PATH=$shimDir;$env:PATH")
-              Add-Content -Path $env:GITHUB_ENV -Value 'MISE_WINDOWS_EXECUTABLE_EXTENSIONS=,exe,bat,cmd,com,ps1,vbs'
       - name: Install mise manually
         if: matrix.runner == 'windows-latest'
         shell: pwsh
         run: |
           $version = 'v2025.7.12'
           $zip     = Join-Path $env:RUNNER_TEMP "mise-$version.zip"
-          $tmpDir  = Join-Path $env:RUNNER_TEMP "mise-extracted"
-          $shimDir = Join-Path $env:RUNNER_TEMP "mise-shims"  # already on PATH from the shim step
+          $dest    = Join-Path $env:RUNNER_TEMP "mise-extracted"
+          $shimDir = Join-Path $env:RUNNER_TEMP "mise-shims"
 
-          # Download and unpack the release
           Invoke-WebRequest `
             -Uri "https://github.com/jdx/mise/releases/download/$version/mise-$version-windows-x64.zip" `
             -OutFile $zip
-          Expand-Archive -Path $zip -DestinationPath $tmpDir -Force
 
-          # Move everything from the archive into the shim directory
-          Get-ChildItem $tmpDir | ForEach-Object {
-            Move-Item -Path $_.FullName -Destination $shimDir -Force
+          Expand-Archive -Path $zip -DestinationPath $dest -Force
+          Get-ChildItem $dest -Recurse | ForEach-Object {
+            Move-Item $_.FullName -Destination $shimDir -Force
           }
-
       - name: Verify mise
         if: matrix.runner == 'windows-latest'
         env:
