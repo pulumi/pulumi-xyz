@@ -48,13 +48,8 @@ size = 195648709
 url = "https://corretto.aws/downloads/resources/11.0.28.6.1/amazon-corretto-11.0.28.6.1-linux-x64.tar.gz"
 
 [[tools.node]]
-version = "20.19.5"
+version = "24.1.0"
 backend = "core:node"
-
-[tools.node.platforms.linux-x64]
-checksum = "sha256:4eba5fbe1fb10753bc06e42f001a91c5cec16798b7764a3e9257adc59af47fe1"
-size = 47041607
-url = "https://nodejs.org/dist/v20.19.5/node-v20.19.5-linux-x64.tar.gz"
 
 [[tools.pulumi]]
 version = "3.190.0"
@@ -66,5 +61,5 @@ size = 92837374
 url = "https://github.com/pulumi/pulumi/releases/download/v3.190.0/pulumi-v3.190.0-linux-x64.tar.gz"
 
 [[tools.python]]
-version = "3.11.8"
+version = "3.12.11"
 backend = "core:python"
