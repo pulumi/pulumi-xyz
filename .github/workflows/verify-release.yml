@@ -44,16 +44,17 @@ jobs:
         if: matrix.runner == 'windows-latest'
         shell: pwsh
         run: |
-              $bash = "${env:ProgramFiles}\Git\bin\bash.exe"
-              if (!(Test-Path $bash)) { throw "Git Bash missing" }
-              $shim = Join-Path $env:RUNNER_TEMP "mise-shims"
-              New-Item -ItemType Directory -Force -Path $shim | Out-Null
-              Copy-Item $bash (Join-Path $shim "bash") -Force
-              # optional, just to double-check
-              Get-ChildItem $shim
-              $paths = $env:PATH -split ';' | Where-Object { $_ -and $_ -notmatch '\\Git\\(usr\\)?bin' }
-              $paths = @($shim) + $paths
-              Set-Content -Path $env:GITHUB_ENV -Value ("PATH=" + ($paths -join ';'))
+              $bashExe = "${env:ProgramFiles}\Git\bin\bash.exe"
+              if (!(Test-Path $bashExe)) { throw "Git Bash missing at $bashExe" }
+
+              $shimDir = Join-Path $env:RUNNER_TEMP "mise-shims"
+              New-Item -ItemType Directory -Force -Path $shimDir | Out-Null
+
+              $shim = Join-Path $shimDir "bash"
+              if (Test-Path $shim) { Remove-Item $shim -Force }
+              New-Item -ItemType SymbolicLink -Path $shim -Target $bashExe | Out-Null
+
+              Add-Content -Path $env:GITHUB_ENV -Value ("PATH=" + $shimDir + ";" + $env:PATH)
               Add-Content -Path $env:GITHUB_ENV -Value 'MISE_WINDOWS_EXECUTABLE_EXTENSIONS=,exe,bat,cmd,com,ps1,vbs'
 
       - name: Setup mise
