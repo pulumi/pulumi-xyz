@@ -49,7 +49,11 @@ jobs:
               $shim = Join-Path $env:RUNNER_TEMP "mise-shims"
               New-Item -ItemType Directory -Force -Path $shim | Out-Null
               Copy-Item $bash (Join-Path $shim "bash") -Force
-              Add-Content -Path $env:GITHUB_ENV -Value ("PATH=" + $shim + ";" + $env:PATH)
+              # optional, just to double-check
+              Get-ChildItem $shim
+              $paths = $env:PATH -split ';' | Where-Object { $_ -and $_ -notmatch '\\Git\\(usr\\)?bin' }
+              $paths = @($shim) + $paths
+              Set-Content -Path $env:GITHUB_ENV -Value ("PATH=" + ($paths -join ';'))
               Add-Content -Path $env:GITHUB_ENV -Value 'MISE_WINDOWS_EXECUTABLE_EXTENSIONS=,exe,bat,cmd,com,ps1,vbs'
 
       - name: Setup mise
