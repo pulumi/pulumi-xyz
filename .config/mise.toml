@@ -2,23 +2,13 @@
 # You can create your own root-level mise.toml file to override/augment this. See https://mise.jdx.dev/configuration.html
 
 [env]
- GO_VERSION = """{% if os_family() == "windows" %}
-  {{ exec(command="pwsh -NoProfile -File '{{config_root}}/scripts/get-versions.ps1' -Name go") | trim }}
-  {% else %}
-  {{ exec(command="bash --noprofile -c '. \"{{config_root}}/scripts/get-versions.sh\" >/dev/null && printf %s \"$GO_VERSION\"'") | trim }}
-  {% endif %}"""
-  PULUMI_VERSION = """{% if os_family() == "windows" %}
-  {{ exec(command="pwsh -NoProfile -File '{{config_root}}/scripts/get-versions.ps1' -Name pulumi") | trim }}
-  {% else %}
-  {{ exec(command="bash --noprofile -c '. \"{{config_root}}/scripts/get-versions.sh\" >/dev/null && printf %s \"$PULUMI_VERSION\"'") | trim }}
-  {% endif %}"""
+_.source = "{{config_root}}/scripts/get-versions.sh"
 
 [tools]
 
 # Runtimes
 # TODO: we may not need `get_env` once https://github.com/jdx/mise/discussions/6339 is fixed
 go = "{{ get_env(name='GO_VERSION', default='latest') }}"
-# go = "1.24"
 node = '20'
 python = '3.11.8'
 dotnet = '8.0'
@@ -27,7 +17,6 @@ java = 'corretto-11'
 
 # Executable tools
 pulumi = "{{ get_env(name='PULUMI_VERSION', default='latest') }}"
-# pulumi = "latest"
 "github:pulumi/pulumictl" = 'latest'
 "github:pulumi/schema-tools" = "latest"
 gradle = '7.6'
