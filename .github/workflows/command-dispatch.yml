@@ -48,3 +48,7 @@ jobs:
         repository: pulumi/pulumi-xyz
         token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
         dispatch-type: workflow
+        static-args: |
+          repository=${{ github.repository }}
+          comment-id=${{ github.event.comment.id }}
+          ref=refs/pull/${{ github.event.issue.number }}/merge
