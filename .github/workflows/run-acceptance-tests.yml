@@ -3,12 +3,10 @@
 name: run-acceptance-tests
 
 on:
+  workflow_call: {} # Can be triggered by slash-command-dispatch.
   pull_request:
     paths-ignore:
     - CHANGELOG.md
-  repository_dispatch:
-    types:
-    - run-acceptance-tests-command
 
 env:
   PULUMI_API: https://api.pulumi-staging.io
