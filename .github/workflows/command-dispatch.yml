@@ -40,9 +40,9 @@ jobs:
       with:
         commands: |
           run-acceptance-tests
-          release
         issue-type: pull-request
         permission: write
         reaction-token: ${{ secrets.GITHUB_TOKEN }}
         repository: pulumi/pulumi-xyz
         token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
+        dispatch-type: workflow
