@@ -1,0 +1,28 @@
+name: "Test Community PR"
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: 'The repository from which the slash command was dispatched'
+        required: true
+      comment-id:
+        description: 'The comment-id of the slash command'
+        required: true
+
+env:
+  PULUMI_API: https://api.pulumi-staging.io
+  PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
+  PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
+  PULUMI_MISSING_DOCS_ERROR: "true"
+  TF_APPEND_USER_AGENT: pulumi
+  XYZ_REGION: us-west-2
+
+jobs:
+  test:
+    if: ${{ inputs.repository == github.repository }}
+    permissions:
+      contents: read
+      id-token: write # For ESC secrets.
+    uses: ./.github/workflows/run-acceptance-tests.yml
+    secrets: inherit
