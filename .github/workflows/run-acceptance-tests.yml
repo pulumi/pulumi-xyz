@@ -9,9 +9,9 @@ on:
   repository_dispatch:
     types:
     - run-acceptance-tests-command
+  workflow_dispatch: {}
 
 env:
-  PR_COMMIT_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
   PULUMI_API: https://api.pulumi-staging.io
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
@@ -32,12 +32,14 @@ jobs:
       contents: read
       pull-requests: write
       id-token: write # For ESC secrets.
+      statuses: write # For community PRs.
     uses: ./.github/workflows/prerequisites.yml
     secrets: inherit
     with:
       default_branch: ${{ github.event.pull_request.base.ref }}
       is_pr: ${{ github.event_name == 'pull_request' }}
       is_automated: ${{ github.actor == 'dependabot[bot]' }}
+      head-sha: ${{ github.event.client_payload.pull_request.head.sha }}
 
   build_provider:
     uses: ./.github/workflows/build_provider.yml
