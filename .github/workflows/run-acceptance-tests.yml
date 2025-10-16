@@ -25,6 +25,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump the client payload context
+        env:
+          PAYLOAD_CONTEXT: ${{ toJson(github.event.client_payload) }}
+        run: echo "$PAYLOAD_CONTEXT"
+
   prerequisites:
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
@@ -39,7 +47,7 @@ jobs:
       default_branch: ${{ github.event.pull_request.base.ref }}
       is_pr: ${{ github.event_name == 'pull_request' }}
       is_automated: ${{ github.actor == 'dependabot[bot]' }}
-      head-sha: ${{ github.event.client_payload.pull_request.head.sha }}
+      head-sha: ${{ github.event.client_payload.pull_request.merge_commit_sha }}
 
   build_provider:
     uses: ./.github/workflows/build_provider.yml
