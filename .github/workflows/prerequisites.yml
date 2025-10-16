@@ -68,7 +68,7 @@ jobs:
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
         git fetch origin ${{ inputs.head-sha }}
-        git merge --no-ff --no-edit ${{ inputs.head-sha }}    
+        git merge --no-ff --no-edit --allow-unrelated-histories ${{ inputs.head-sha }}    
     - env:
         ESC_ACTION_ENVIRONMENT: github-secrets/${{ github.repository_owner }}-${{ github.event.repository.name }}
         ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: "false"
