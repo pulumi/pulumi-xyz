@@ -14,7 +14,7 @@ on:
       default_branch:
         type: string
         required: true
-      head-sha:
+      sha:
         type: string
         required: false
     outputs:
@@ -38,30 +38,13 @@ jobs:
       contents: read
       pull-requests: write
       id-token: write # For ESC secrets.
-      checks: write # For community PRs.
     outputs:
       version: ${{ steps.provider-version.outputs.version }}
     steps:
-    - name: Create pending check run for community PR
-      id: create_check
-      if: ${{ inputs.head-sha }}
-      uses: actions/github-script@v7
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        # TODO: details_url pointing to the action.
-        script: |
-          const { data: check } = await github.rest.checks.create({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            name: "prerequisites",
-            head_sha: "${{ inputs.head-sha }}",
-            status: "in_progress"
-          });
-          core.setOutput("check_id", check.id);
     - name: Checkout Repo
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
-        ref: ${{ inputs.head-sha }}
+        ref: ${{ inputs.sha }}
         persist-credentials: false    
     - env:
         ESC_ACTION_ENVIRONMENT: github-secrets/${{ github.repository_owner }}-${{ github.event.repository.name }}
@@ -138,33 +121,3 @@ jobs:
 
     - name: Upload artifacts
       uses: ./.github/actions/upload-prerequisites
-
-    - if: success() && inputs.head-sha
-      name: Report success on community PR
-      uses: actions/github-script@v7
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          await github.rest.checks.update({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            check_run_id: ${{ steps.create_check.outputs.check_id }},
-            conclusion: "success",
-            status: "completed",
-            completed_at: new Date().toISOString(),
-          });
-
-    - if: failure() && inputs.head-sha
-      name: Report failure on community PR
-      uses: actions/github-script@v7
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          await github.rest.checks.update({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            check_run_id: ${{ steps.create_check.outputs.check_id }},
-            conclusion: "failure",
-            status: "completed",
-            completed_at: new Date().toISOString(),
-          });
