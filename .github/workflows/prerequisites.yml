@@ -48,6 +48,7 @@ jobs:
       uses: actions/github-script@v7
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        # TODO: details_url pointing to the action.
         script: |
           const { data: check } = await github.rest.checks.create({
             owner: context.repo.owner,
@@ -60,15 +61,8 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
-        persist-credentials: false
-
-    - name: Create merge commit for community PR
-      if: ${{ inputs.head-sha }}
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-        git fetch origin ${{ inputs.head-sha }}
-        git merge --no-ff --no-edit --allow-unrelated-histories ${{ inputs.head-sha }}    
+        ref: ${{ inputs.head-sha }}
+        persist-credentials: false    
     - env:
         ESC_ACTION_ENVIRONMENT: github-secrets/${{ github.repository_owner }}-${{ github.event.repository.name }}
         ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: "false"
