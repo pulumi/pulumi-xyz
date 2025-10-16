@@ -38,7 +38,7 @@ jobs:
       contents: read
       pull-requests: write
       id-token: write # For ESC secrets.
-      statuses: write # For community PRs.
+      checks: write # For community PRs.
     outputs:
       version: ${{ steps.provider-version.outputs.version }}
     steps:

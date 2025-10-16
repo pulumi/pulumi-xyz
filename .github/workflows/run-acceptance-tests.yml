@@ -32,7 +32,7 @@ jobs:
       contents: read
       pull-requests: write
       id-token: write # For ESC secrets.
-      statuses: write # For community PRs.
+      checks: write # For community PRs.
     uses: ./.github/workflows/prerequisites.yml
     secrets: inherit
     with:
