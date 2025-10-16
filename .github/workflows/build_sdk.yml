@@ -10,6 +10,7 @@ on:
         type: string
       sha:
         type: string
+        description: The commit to build, primarily for community PRs.
 
 env:
   PULUMI_API: https://api.pulumi-staging.io

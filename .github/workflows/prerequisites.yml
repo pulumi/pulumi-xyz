@@ -17,6 +17,7 @@ on:
       sha:
         type: string
         required: false
+        description: The commit to build, primarily for community PRs.
     outputs:
       version:
         description: "Provider version being built"
