@@ -65,6 +65,8 @@ jobs:
     - name: Create merge commit for community PR
       if: ${{ inputs.head-sha }}
       run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
         git fetch origin ${{ inputs.head-sha }}
         git merge --no-ff --no-edit ${{ inputs.head-sha }}    
     - env:
@@ -156,14 +158,10 @@ jobs:
             conclusion: "success",
             status: "completed",
             completed_at: new Date().toISOString(),
-            output: {
-              title: "Tests passed",
-              summary: "All tests passed ✅"
-            }
           });
 
     - if: failure() && inputs.head-sha
-      name: Report success on community PR
+      name: Report failure on community PR
       uses: actions/github-script@v7
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -175,8 +173,4 @@ jobs:
             conclusion: "failure",
             status: "completed",
             completed_at: new Date().toISOString(),
-            output: {
-              title: "Tests failed",
-              summary: "Some tests failed ❌"
-            }
           });
