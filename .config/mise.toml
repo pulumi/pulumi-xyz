@@ -23,6 +23,10 @@ gradle = '7.6'
 golangci-lint = "1.64.8" # See note about about overrides if you need to customize this.
 "npm:yarn" = "1.22.22"
 
+"github:pulumi/pulumi-random" = "latest"
+"github:pulumi/pulumi-std" = "latest"
+"github:pulumi/pulumi-converter-terraform" = "latest"
+
 [settings]
 experimental = true # Required for Go binaries (e.g. pulumictl).
 lockfile = true

@@ -2,6 +2,39 @@
 version = "8.0.414"
 backend = "asdf:dotnet"
 
+[[tools."github:pulumi/pulumi-converter-terraform"]]
+version = "1.2.4"
+backend = "github:pulumi/pulumi-converter-terraform"
+
+[tools."github:pulumi/pulumi-converter-terraform".platforms.linux-x64]
+checksum = "blake3:7d0dd6c5494200d8874f648c9590c07f8991897c7807654911c8f46511f1b243"
+name = "pulumi-converter-terraform-v1.2.4-linux-amd64.tar.gz"
+size = 14208816
+url = "https://github.com/pulumi/pulumi-converter-terraform/releases/download/v1.2.4/pulumi-converter-terraform-v1.2.4-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/pulumi/pulumi-converter-terraform/releases/assets/289614957"
+
+[[tools."github:pulumi/pulumi-random"]]
+version = "4.18.4"
+backend = "github:pulumi/pulumi-random"
+
+[tools."github:pulumi/pulumi-random".platforms.linux-x64]
+checksum = "blake3:deac6b43184c6b8c2af2b5fcb8e50cb47068a6eb64f99b076af18e3ea2243202"
+name = "pulumi-resource-random-v4.18.4-linux-amd64.tar.gz"
+size = 15060227
+url = "https://github.com/pulumi/pulumi-random/releases/download/v4.18.4/pulumi-resource-random-v4.18.4-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/pulumi/pulumi-random/releases/assets/303801688"
+
+[[tools."github:pulumi/pulumi-std"]]
+version = "2.2.0"
+backend = "github:pulumi/pulumi-std"
+
+[tools."github:pulumi/pulumi-std".platforms.linux-x64]
+checksum = "blake3:642c6b58c7abe4cf0b008eca3cdb625f2dc4eaf6acb444506a8df36def9faae9"
+name = "pulumi-resource-std-v2.2.0-linux-amd64.tar.gz"
+size = 8122211
+url = "https://github.com/pulumi/pulumi-std/releases/download/v2.2.0/pulumi-resource-std-v2.2.0-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/pulumi/pulumi-std/releases/assets/228898829"
+
 [[tools."github:pulumi/pulumictl"]]
 version = "0.0.50"
 backend = "github:pulumi/pulumictl"
