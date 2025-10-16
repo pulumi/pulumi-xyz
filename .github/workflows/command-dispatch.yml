@@ -59,9 +59,3 @@ jobs:
         reaction-token: ${{ secrets.GITHUB_TOKEN }}
         repository: pulumi/pulumi-xyz
         token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
-        dispatch-type: workflow
-        allow-edits: true
-        static-args: |
-          repository=${{ github.repository }}
-          comment-id=${{ github.event.comment.id }}
-          head-sha=${{ steps.pr.outputs.head_sha }}
