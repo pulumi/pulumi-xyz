@@ -4,7 +4,7 @@ go 1.23.11
 
 toolchain go1.24.6
 
-require github.com/pulumi/pulumi/pkg/v3 v3.190.0
+require github.com/pulumi/pulumi/pkg/v3 v3.203.0
 
 require (
 	cloud.google.com/go v0.112.1 // indirect
@@ -176,4 +176,4 @@ require (
 	lukechampine.com/frand v1.4.2 // indirect
 )
 
-replace github.com/hashicorp/terraform-plugin-sdk/v2 => github.com/pulumi/terraform-plugin-sdk/v2 v2.0.0-20250923233607-7f1981c8674a
+replace github.com/hashicorp/terraform-plugin-sdk/v2 => github.com/pulumi/terraform-plugin-sdk/v2 717b4eff435b
