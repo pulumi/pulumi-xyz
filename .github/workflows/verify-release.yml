@@ -96,7 +96,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6
         with:
-          go-version: "1.22.x"
+          go-version: "1.21.x"
           cache-dependency-path: |
             provider/*.sum
             upstream/*.sum
@@ -104,6 +104,9 @@ jobs:
             sdk/*.sum
             *.sum
           cache: true
+      - name: Set Go Toolchain to auto explicitly
+        run: |
+          echo "GOTOOLCHAIN=auto" >> "$GITHUB_ENV"
       - name: Install Pulumi CLI
         uses: pulumi/actions@d7ceb0215da5a14ec84f50b703365ddf0194a9c8 # v6
         with:
