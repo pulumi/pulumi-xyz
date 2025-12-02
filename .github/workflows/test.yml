@@ -31,7 +31,7 @@ jobs:
       PROVIDER_VERSION: ${{ inputs.version }}
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       with:
         ref: ${{ env.PR_COMMIT_SHA }}
         persist-credentials: false    
@@ -46,7 +46,7 @@ jobs:
       uses: pulumi/esc-action@9eb774255b1a4afb7855678ae8d4a77359da0d9b
     - name: Checkout p/examples
       if: matrix.testTarget == 'pulumiExamples'
-      uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       with:
         repository: pulumi/examples
         path: p-examples
@@ -81,7 +81,7 @@ jobs:
       with:
         language: ${{ matrix.language }}
     - name: Restore makefile progress
-      run: make --touch provider schema build_${{ matrix.language }}
+      run: make --touch provider schema build_sdks SDK_LANG=${{ matrix.language }}
     - name: Update path
       run: echo "${{ github.workspace }}/bin" >> "$GITHUB_PATH"
     - name: Install Python deps
@@ -89,8 +89,6 @@ jobs:
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
-    - name: Install dependencies
-      run: make install_${{ matrix.language}}_sdk
     - name: Run tests
       if: matrix.testTarget == 'local'
       run: cd examples && go test -v -count=1 -cover -timeout 2h -tags=${{ matrix.language }} -skip TestPulumiExamples -parallel 4 .
