@@ -18,7 +18,6 @@ env:
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   PULUMI_MISSING_DOCS_ERROR: "true"
-  PULUMI_PULUMI_ENABLE_JOURNALING: "true"
   TF_APPEND_USER_AGENT: pulumi
   XYZ_REGION: us-west-2
 
@@ -32,7 +31,7 @@ jobs:
       PROVIDER_VERSION: ${{ inputs.version }}
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       with:
         ref: ${{ env.PR_COMMIT_SHA }}
         persist-credentials: false    
@@ -47,12 +46,12 @@ jobs:
       uses: pulumi/esc-action@9eb774255b1a4afb7855678ae8d4a77359da0d9b
     - name: Checkout p/examples
       if: matrix.testTarget == 'pulumiExamples'
-      uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       with:
         repository: pulumi/examples
         path: p-examples
     - name: Setup mise
-      uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3
+      uses: jdx/mise-action@v3
       env:
         MISE_ENV: test
         MISE_FETCH_REMOTE_VERSIONS_TIMEOUT: 30s
@@ -82,7 +81,7 @@ jobs:
       with:
         language: ${{ matrix.language }}
     - name: Restore makefile progress
-      run: make --touch provider schema build_${{ matrix.language }}
+      run: make --touch provider schema build_sdks
     - name: Update path
       run: echo "${{ github.workspace }}/bin" >> "$GITHUB_PATH"
     - name: Install Python deps
@@ -90,8 +89,8 @@ jobs:
       run: |-
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
-    - name: Install dependencies
-      run: make install_${{ matrix.language}}_sdk
+    - name: Link SDKs
+      run: provider-sdk-builder install  --sdkLocation ${{ github.workspace }}/sdk/ -l ${{ matrix.language}} --installLocation ${{ github.workspace }}
     - name: Run tests
       if: matrix.testTarget == 'local'
       run: cd examples && go test -v -count=1 -cover -timeout 2h -tags=${{ matrix.language }} -skip TestPulumiExamples -parallel 4 .
