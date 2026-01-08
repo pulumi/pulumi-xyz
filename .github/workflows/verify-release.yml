@@ -53,15 +53,15 @@ jobs:
         runner: ["ubuntu-latest", "windows-latest", "macos-latest"]
     runs-on: ${{ matrix.runner }}
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
     steps:
       - name: Configure Git to checkout files with long names
         run: git config --global core.longpaths true
       - name: Checkout Repo
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
-          persist-credentials: false      
+          persist-credentials: false
       - env:
           ESC_ACTION_ENVIRONMENT: github-secrets/${{ github.repository_owner }}-${{ github.event.repository.name }}
           ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: "false"
@@ -74,7 +74,7 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@v3
         with:
-          version: 2025.11.6
+          version: 2026.1.1
           github_token: ${{ secrets.GITHUB_TOKEN }}
           cache_save: false
       - name: Setup Go Cache
