@@ -1,17 +1,16 @@
 provider: xyz
 esc:
-    enabled: true
+  enabled: true
 env:
-    PULUMI_MISSING_DOCS_ERROR: true
-    XYZ_REGION: "us-west-2"
+  PULUMI_MISSING_DOCS_ERROR: true
+  XYZ_REGION: "us-west-2"
 makeTemplate: bridged
 providerDefaultBranch: main
 pulumiConvert: 1
 goBuildParallelism: 2
 major-version: 1
-testMasterAndReleaseWorkflows: false
 releaseVerification:
-    nodejs: examples/basic
+  nodejs: examples/basic
 checkUpstreamUpgrade: true
 # Enable these to test that the disk cleaning works correctly
 freeDiskSpaceBeforeBuild: false
