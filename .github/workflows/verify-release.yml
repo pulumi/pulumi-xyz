@@ -50,6 +50,8 @@ jobs:
     strategy:
       matrix:
         runner: ["windows-2022", "windows-latest"]
+        mise: ["2026.1.1", "2026.2.10"]
+        pulumi: ["3.220", "3.219"]
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: 'read'
@@ -73,9 +75,12 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@c1a019b8d2586943b4dbebc456323b516910e310
         with:
-          version: 2026.2.10
+          version: ${{ matrix.mise }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           cache_save: false
+          mise_toml: |
+            [tools]
+            "github:pulumi/pulumi" = ${{ matrix.pulumi }}
       - name: Setup Go Cache
         uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6
         with:
