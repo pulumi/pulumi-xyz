@@ -13,7 +13,7 @@ env:
   XYZ_REGION: us-west-2
 
 jobs:
-  verify_release:
+  reproduce_issue_1964:
     name: verify_release
     permissions:
       contents: write
