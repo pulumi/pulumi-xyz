@@ -80,7 +80,7 @@ jobs:
           cache_save: false
           mise_toml: |
             [tools]
-            "github:pulumi/pulumi" = ${{ matrix.pulumi }}
+            "github:pulumi/pulumi" = "${{ matrix.pulumi }}"
       - name: Setup Go Cache
         uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6
         with:
