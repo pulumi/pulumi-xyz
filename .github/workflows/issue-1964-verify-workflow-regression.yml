@@ -1,0 +1,26 @@
+name: "Reproduce issue 1964 related to verify release action"
+
+on:
+  workflow_dispatch: {}
+
+env:
+  IS_PRERELEASE: ${{ inputs.isPrerelease }}
+  PULUMI_API: https://api.pulumi-staging.io
+  PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
+  PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
+  PULUMI_MISSING_DOCS_ERROR: "true"
+  TF_APPEND_USER_AGENT: pulumi
+  XYZ_REGION: us-west-2
+
+  verify_release:
+    name: verify_release
+    needs: publish_sdk
+    permissions:
+      contents: write
+      id-token: write
+    uses: ./.github/workflows/verify-release.yml
+    secrets: inherit
+    with:
+      providerVersion: "1.2.0-alpha.1771000827"
+      skipGoSdk: true
+      pythonVersion: "1.2.0a1771000827"
