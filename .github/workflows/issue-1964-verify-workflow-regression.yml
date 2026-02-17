@@ -1,6 +1,6 @@
 name: "Reproduce issue 1964 related to verify release action"
 
-on:
+'on':
   workflow_dispatch: {}
 
 env:
