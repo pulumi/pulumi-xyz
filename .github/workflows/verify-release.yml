@@ -49,7 +49,7 @@ jobs:
     name: verify-release
     strategy:
       matrix:
-        runner: ["ubuntu-2022", "windows-latest"]
+        runner: ["windows-2022", "windows-latest"]
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: 'read'
