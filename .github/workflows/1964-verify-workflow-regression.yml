@@ -1,4 +1,4 @@
-name: "Reproduce issue 1964 related to verify release action"
+name: "issue 1964 related to verify release action"
 
 'on':
   workflow_dispatch: {}
