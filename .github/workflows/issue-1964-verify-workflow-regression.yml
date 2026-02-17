@@ -14,7 +14,7 @@ env:
 
 jobs:
   reproduce_issue_1964:
-    name: verify_release
+    name: reproduce_issue_1964
     permissions:
       contents: write
       id-token: write
