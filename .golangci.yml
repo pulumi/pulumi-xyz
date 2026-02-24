@@ -6,7 +6,6 @@ linters:
   enable:
   - errcheck
   - goconst
-  - gofmt
   - gosec
   - govet
   - ineffassign
@@ -21,6 +20,7 @@ linters:
 formatters:
   enable:
   - gci
+  - gofmt
 issues:
   exclude-dirs:
   - pkg/vendored
