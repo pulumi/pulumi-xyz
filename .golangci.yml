@@ -5,7 +5,6 @@ version: 2
 linters:
   enable:
   - errcheck
-  - gci
   - goconst
   - gofmt
   - gosec
@@ -19,6 +18,9 @@ linters:
   - unconvert
   - unused
   enable-all: false
+formatters:
+  enable:
+  - gci
 issues:
   exclude-dirs:
   - pkg/vendored
