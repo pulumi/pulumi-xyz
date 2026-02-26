@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package main provides the entry point for the pulumi-tfgen-xyz schema generator binary.
 package main
 
 import (

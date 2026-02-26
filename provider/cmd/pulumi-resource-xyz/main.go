@@ -14,6 +14,7 @@
 
 //go:generate go run ./generate.go
 
+// Package main provides the entry point for the pulumi-resource-xyz provider binary.
 package main
 
 import (
