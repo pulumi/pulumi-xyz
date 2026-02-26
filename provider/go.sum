@@ -2032,8 +2032,8 @@ github.com/hashicorp/terraform-plugin-log v0.10.0/go.mod h1:/9RR5Cv2aAbrqcTSdNmY
 github.com/hashicorp/terraform-plugin-sdk v1.7.0 h1:B//oq0ZORG+EkVrIJy0uPGSonvmXqxSzXe8+GhknoW0=
 github.com/hashicorp/terraform-plugin-sdk v1.7.0/go.mod h1:OjgQmey5VxnPej/buEhe+YqKm0KNvV3QqU4hkqHqPCY=
 github.com/hashicorp/terraform-plugin-test v1.2.0/go.mod h1:QIJHYz8j+xJtdtLrFTlzQVC0ocr3rf/OjIpgZLK56Hs=
-github.com/hashicorp/terraform-plugin-testing v1.10.0 h1:2+tmRNhvnfE4Bs8rB6v58S/VpqzGC6RCh9Y8ujdn+aw=
-github.com/hashicorp/terraform-plugin-testing v1.10.0/go.mod h1:iWRW3+loP33WMch2P/TEyCxxct/ZEcCGMquSLSCVsrc=
+github.com/hashicorp/terraform-plugin-testing v1.11.0 h1:MeDT5W3YHbONJt2aPQyaBsgQeAIckwPX41EUHXEn29A=
+github.com/hashicorp/terraform-plugin-testing v1.11.0/go.mod h1:WNAHQ3DcgV/0J+B15WTE6hDvxcUdkPPpnB1FR3M910U=
 github.com/hashicorp/terraform-registry-address v0.4.0 h1:S1yCGomj30Sao4l5BMPjTGZmCNzuv7/GDTDX99E9gTk=
 github.com/hashicorp/terraform-registry-address v0.4.0/go.mod h1:LRS1Ay0+mAiRkUyltGT+UHWkIqTFvigGn/LbMshfflE=
 github.com/hashicorp/terraform-svchost v0.0.0-20191011084731-65d371908596/go.mod h1:kNDNcF7sN4DocDLBkQYz73HGKwN1ANB1blq4lIYLYvg=
@@ -2393,8 +2393,8 @@ github.com/pulumi/terraform-diff-reader v0.0.2 h1:kTE4nEXU3/SYXESvAIem+wyHMI3abq
 github.com/pulumi/terraform-diff-reader v0.0.2/go.mod h1:sZ9FUzGO+yM41hsQHs/yIcj/Y993qMdBxBU5mpDmAfQ=
 github.com/pulumi/terraform-plugin-sdk/v2 v2.0.0-20250923233607-7f1981c8674a h1:bTwou+tt2fyfuuCp9+VQOlgEJk/xKEaYeoX2HCtp2es=
 github.com/pulumi/terraform-plugin-sdk/v2 v2.0.0-20250923233607-7f1981c8674a/go.mod h1:rpW/bFN645nI+o0jth9hyIs/eWi3GP3B1J39fWZKC0Y=
-github.com/pulumi/terraform-provider-xyz v0.0.2 h1:Q8ep93HBHf4gSbLqK0rGiyXUV4duS3OZDWOXRFJjmhY=
-github.com/pulumi/terraform-provider-xyz v0.0.2/go.mod h1:kJBjN1afbxe6Mz1V2uyAVFn9eu6ggWcB1L2Iv6evDC0=
+github.com/pulumi/terraform-provider-xyz v0.0.3 h1:2nQdrwL/w4DcC66qs+UB6aIno8aLWTnE5Rp0l3PtgPg=
+github.com/pulumi/terraform-provider-xyz v0.0.3/go.mod h1:yD5Smp1kibeVU6BFhdBCLeeCA09r5+pFAHAEBbCCyS0=
 github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
 github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0/go.mod h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo=
 github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec/go.mod h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo=
