@@ -37,14 +37,14 @@ jobs:
       id: esc-secrets
       name: Fetch secrets from ESC
       uses: pulumi/esc-action@9eb774255b1a4afb7855678ae8d4a77359da0d9b
-    - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+    - uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
       id: app-auth
       with:
         app-id: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_APP_ID }}
         private-key: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_PRIVATE_KEY }}
         owner: ${{ github.repository_owner }}
     - name: Setup mise
-      uses: jdx/mise-action@c1a019b8d2586943b4dbebc456323b516910e310
+      uses: jdx/mise-action@d6e9fb75ae3ee715d1db0b62373f15621d5f7329
       env:
         MISE_FETCH_REMOTE_VERSIONS_TIMEOUT: 30s
       with:
