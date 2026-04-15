@@ -62,7 +62,7 @@ jobs:
         private-key: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_PRIVATE_KEY }}
         owner: ${{ github.repository_owner }}
     - name: Setup mise
-      uses: jdx/mise-action@c1a019b8d2586943b4dbebc456323b516910e310
+      uses: jdx/mise-action@d6e9fb75ae3ee715d1db0b62373f15621d5f7329
       env:
         MISE_FETCH_REMOTE_VERSIONS_TIMEOUT: 30s
       with:
@@ -115,7 +115,7 @@ jobs:
     - name: Upload Provider Binaries
       run: aws s3 cp dist s3://get.pulumi.com/releases/plugins/ --recursive
     - name: Create GH Release
-      uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2
+      uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
       if: inputs.isPrerelease == false
       with:
         tag_name: v${{ inputs.version }}
@@ -158,7 +158,7 @@ jobs:
         private-key: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_PRIVATE_KEY }}
         owner: ${{ github.repository_owner }}
     - name: Setup mise
-      uses: jdx/mise-action@c1a019b8d2586943b4dbebc456323b516910e310
+      uses: jdx/mise-action@d6e9fb75ae3ee715d1db0b62373f15621d5f7329
       env:
         MISE_FETCH_REMOTE_VERSIONS_TIMEOUT: 30s
       with:
