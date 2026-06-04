@@ -206,6 +206,13 @@ build_python: .make/build_python
 	@touch $@
 .PHONY: generate_python build_python
 
+# TEMPORARY (pre-merge test): shadow-gen diff target. Refs pinned to the PR
+# branch so the not-yet-merged compare-sdk command resolves. See pulumi/ci-mgmt#2300.
+compare_sdks: compare_sdk_nodejs compare_sdk_python compare_sdk_dotnet compare_sdk_go compare_sdk_java
+compare_sdk_%: .make/mise_install bin/$(CODEGEN) .make/schema | mise_env
+	GOPROXY=direct GOSUMDB=off go run github.com/pulumi/ci-mgmt/provider-ci@5c67225ff01a0a1c97db76ce8e1481ef79acc5ef compare-sdk --language $*
+.PHONY: compare_sdks
+
 clean:
 	rm -rf sdk/{dotnet,nodejs,go,python}
 	rm -rf bin/*
