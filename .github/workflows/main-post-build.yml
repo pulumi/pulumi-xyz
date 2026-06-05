@@ -58,7 +58,7 @@ jobs:
           aws-region: us-west-2
           aws-secret-access-key: ${{ steps.esc-secrets.outputs.AWS_CORP_S3_UPLOAD_SECRET_ACCESS_KEY }}
       - name: Setup mise
-        uses: jdx/mise-action@8d3b0ba20a9cea7b883d922ea958553c941ab082
+        uses: jdx/mise-action@920c1fed1b4326f6de36bfb765c73f0140d42e4b
         env:
           MISE_FETCH_REMOTE_VERSIONS_TIMEOUT: 30s
         with:
