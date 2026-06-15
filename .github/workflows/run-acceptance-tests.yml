@@ -80,7 +80,7 @@ jobs:
       id: esc-secrets
       name: Fetch secrets from ESC
       uses: pulumi/esc-action@9eb774255b1a4afb7855678ae8d4a77359da0d9b
-    - uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
+    - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
       id: app-auth
       with:
         app-id: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_APP_ID }}
@@ -139,7 +139,7 @@ jobs:
       id: esc-secrets
       name: Fetch secrets from ESC
       uses: pulumi/esc-action@9eb774255b1a4afb7855678ae8d4a77359da0d9b
-    - uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
+    - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
       id: app-auth
       with:
         app-id: ${{ steps.esc-secrets.outputs.PULUMI_PROVIDER_AUTOMATION_APP_ID }}
@@ -216,6 +216,25 @@ jobs:
       id-token: write # For ESC secrets.
     with:
       version: ${{ needs.prerequisites.outputs.version }}
+
+  # Shadow-gen diff: informational, non-blocking comparison of legacy codegen vs
+  # `pulumi package gen-sdk`. The logic lives centrally in pulumi/ci-mgmt; this is
+  # only a thin reference. TEMPORARY - removed once the migration is verified
+  # (pulumi/ci-mgmt#2291).
+  compare_sdk:
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    name: compare_sdk
+    needs: prerequisites
+    uses: pulumi/ci-mgmt/.github/workflows/compare_sdk.yml@master
+    permissions:
+      contents: read
+    with:
+      version: ${{ needs.prerequisites.outputs.version }}
+      languages: '["nodejs","python","dotnet","go","java"]'
+      runs-on: ubuntu-latest
+      mise-version: 2026.3.7
+      checkout-submodules: 'false'
 
   comment-notification:
     if: github.event_name == 'repository_dispatch'
