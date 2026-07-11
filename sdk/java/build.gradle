@@ -12,7 +12,7 @@ group = "com.pulumi"
 
 def resolvedVersion = System.getenv("PACKAGE_VERSION") ?:
     (project.version == "unspecified"
-         ? "1.0.0-alpha.0+dev"
+         ? "1.2.0-alpha.1783767104+a0a3b62"
          : project.version)
 
 def signingKey = System.getenv("SIGNING_KEY")
@@ -95,7 +95,7 @@ publishing {
                 inceptionYear = "2022"
                 name = "pulumi-xyz"
                 packaging = "jar"
-                description = "A Pulumi package for creating and managing xyz cloud resources."
+                description = $/A Pulumi package for creating and managing xyz cloud resources./$
 
                 url = "https://github.com/pulumi/pulumi-xyz"
 
