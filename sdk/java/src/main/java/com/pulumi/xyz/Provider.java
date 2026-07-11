@@ -4,10 +4,13 @@
 package com.pulumi.xyz;
 
 import com.pulumi.core.Output;
+import com.pulumi.core.annotations.Export;
 import com.pulumi.core.annotations.ResourceType;
 import com.pulumi.core.internal.Codegen;
 import com.pulumi.xyz.ProviderArgs;
 import com.pulumi.xyz.Utilities;
+import com.pulumi.xyz.region.enums.Region;
+import java.util.Optional;
 import javax.annotation.Nullable;
 
 /**
@@ -19,6 +22,21 @@ import javax.annotation.Nullable;
  */
 @ResourceType(type="pulumi:providers:xyz")
 public class Provider extends com.pulumi.resources.ProviderResource {
+    /**
+     * A region which should be used.
+     * 
+     */
+    @Export(name="region", refs={Region.class}, tree="[0]")
+    private Output</* @Nullable */ Region> region;
+
+    /**
+     * @return A region which should be used.
+     * 
+     */
+    public Output<Optional<Region>> region() {
+        return Codegen.optional(this.region);
+    }
+
     /**
      *
      * @param name The _unique_ name of the resulting resource.
