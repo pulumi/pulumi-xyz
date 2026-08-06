@@ -1,6 +1,6 @@
 {
     "name": "xyz",
-    "description": "A Pulumi package for creating and managing xyz cloud resources.",
+    "description": "A test provider used by Pulumi CI to exercise provider tooling. It manages no real cloud resources and is not intended for use in Pulumi programs.",
     "keywords": [
         "pulumi",
         "xyz",
@@ -29,7 +29,7 @@
             "respectSchemaVersion": true
         },
         "nodejs": {
-            "packageDescription": "A Pulumi package for creating and managing xyz cloud resources.",
+            "packageDescription": "A test provider used by Pulumi CI to exercise provider tooling. It manages no real cloud resources and is not intended for use in Pulumi programs.",
             "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/terraform-providers/terraform-provider-xyz)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-xyz` repo](https://github.com/pulumi/pulumi-xyz/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-xyz` repo](https://github.com/terraform-providers/terraform-provider-xyz/issues).",
             "devDependencies": {
                 "@types/mime": "^2.0.0",

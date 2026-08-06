@@ -1,6 +1,11 @@
 # XYZ Resource Provider
 
-The xyz Resource Provider lets you manage [xyz](http://example.com) resources.
+The xyz Resource Provider is a test provider used by Pulumi CI to exercise
+provider tooling. It manages no real cloud resources and is not intended for
+use in Pulumi programs.
+
+The install instructions below exist so that CI can exercise the published
+SDKs. They are not a recommendation to depend on this package.
 
 ## Installing
 
