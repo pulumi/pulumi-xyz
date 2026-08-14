@@ -34,12 +34,8 @@ type DataSourceResult struct {
 }
 
 func DataSourceOutput(ctx *pulumi.Context, args DataSourceOutputArgs, opts ...pulumi.InvokeOption) DataSourceResultOutput {
-	return pulumi.ToOutputWithContext(ctx.Context(), args).
-		ApplyT(func(v interface{}) (DataSourceResultOutput, error) {
-			args := v.(DataSourceArgs)
-			options := pulumi.InvokeOutputOptions{InvokeOptions: internal.PkgInvokeDefaultOpts(opts)}
-			return ctx.InvokeOutput("xyz:index/dataSource:DataSource", args, DataSourceResultOutput{}, options).(DataSourceResultOutput), nil
-		}).(DataSourceResultOutput)
+	options := pulumi.InvokeOutputOptions{InvokeOptions: internal.PkgInvokeDefaultOpts(opts)}
+	return ctx.InvokeOutput("xyz:index/dataSource:DataSource", args, DataSourceResultOutput{}, options).(DataSourceResultOutput)
 }
 
 // A collection of arguments for invoking DataSource.
